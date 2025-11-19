@@ -1,0 +1,40 @@
+{% extends '../base.html' %}
+{% load static %}
+
+{% block page_head %}
+{% endblock %}
+
+{% block page_title %}
+<span>Deletar Projeto</span>
+{% endblock %}
+
+{% block page_content %}
+<div>
+  <article>
+    <div class="page-group-title mb-3">Deletar projeto: <span class="fw-medium">{{ object.name }}</span></div>
+    <div class="bg-white rounded-3 shadow-sm py-2">
+      <div class="p-3">
+        <div class="d-flex justify-content-center py-4 alert alert-danger">
+          <p>Tem certeza que deseja deletar o projeto <strong>"{{ object }}"</strong>?</p>
+        </div>
+        <div>
+          <form method="post">
+            {% csrf_token %}
+            {{ form }}
+            <div class="d-flex justify-content-end gap-3 mt-2">
+              <a class="btn btn-secondary py-2 px-3" href="{% url 'project-detail' pk=project.id %}">
+                <i class="fa-solid fa-xmark fa-lg me-2"></i>
+                <span>Cancelar</span>
+              </a>
+              <button class="btn btn-danger py-2 px-3" type="submit">
+                <i class="fa-solid fa-trash-can fa-lg me-2"></i>
+                <span>Deletar Projeto</span>
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </article>
+</div>
+{% endblock %}

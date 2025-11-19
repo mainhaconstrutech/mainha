@@ -1,0 +1,82 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block page_head %}
+{% endblock %}
+
+{% block page_title %}
+<span>Dashboard</span>
+{% endblock %}
+
+{% block page_content %}
+<div>
+  <article>
+    <div class="page-group-title mb-3">Projetos</div>
+    <div class="row gy-3 mb-4">
+      <div class="col-12 col-md-6 col-xl-3">
+        <div class="bg-white rounded-3 shadow-sm p-3">
+          <h4 class="card-info-title">
+            Conformes:
+          </h4>
+          <p class="card-info-data" style="color: var(--dashboard-green, #22C55E);">
+            {{ projects_success_total }}
+          </p>
+        </div>
+      </div>
+      <div class="col-12 col-md-6 col-xl-3">
+        <div class="bg-white rounded-3 shadow-sm p-3">
+          <h4 class="card-info-title">
+            Não Conformes:
+          </h4>
+          <p class="card-info-data" style="color: var(--dashboard-red, #EF4444);">
+            {{ projects_failed_total }}
+          </p>
+        </div>
+      </div>
+      <div class="col-12 col-md-6 col-xl-3">
+        <div class="bg-white rounded-3 shadow-sm p-3">
+          <h4 class="card-info-title">
+            Total:
+          </h4>
+          <p class="card-info-data text-black">
+            {{ projects_all_total }}
+          </p>
+        </div>
+      </div>
+      <div class="col-12 col-md-6 col-xl-3">
+        <div class="bg-white rounded-3 shadow-sm p-3">
+          <h4 class="card-info-title">
+            Taxa de Conformidade:
+          </h4>
+          <p class="card-info-data" style="color: var(--dashboard-blue, #3B82F6);">
+            {{ projects_success_rate|floatformat:2 }}%
+          </p>
+        </div>
+      </div>
+    </div>
+  </article>
+
+  <article>
+    <div class="page-group-title mb-3">Atividades recentes</div>
+    <div class="bg-white rounded-3 shadow-sm py-2">
+      {% for project in projects %}
+      <div class="d-flex flex-row justify-content-between align-items-center list-item-container">
+        <div class="flex-grow-1 d-flex flex-column">
+          <h6 class="fw-semibold">{{ project.name }}</h6>
+          <p class="subtext">{{ project.updated_at|date:"d/m/Y H:i:s" }}</p>
+        </div>
+        <div>
+          <span class="status-tag text-nowrap rounded-pill {{project.status}}">{{ project.status }}</span>
+        </div>
+      </div>
+      {% empty %}
+      <div class="d-flex flex-row justify-content-center align-items-center list-item-container">
+        <div class="alert alert-dark text-center py-4  w-100">
+          <p><strong>Você ainda não tem projeto.</strong></p>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </article>
+</div>
+{% endblock %}

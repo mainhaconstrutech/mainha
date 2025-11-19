@@ -1,0 +1,47 @@
+{% extends '../base.html' %}
+{% load static %}
+
+{% block page_head %}
+{% endblock %}
+
+{% block page_body %}
+
+<body class="d-flex justify-content-center align-items-center" style="background-color: #F3F4F6;">
+    <div class="card p-3" style="width: 100%; max-width: 450px;">
+        <div class="card-body">
+            <div class="d-flex flex-column justify-content-center align-items-center">
+                <h4 class="card-title fw-bold">Bem-vindo ao MÃINHA</h4>
+                <p class="card-subtitle mb-2 text-black-50">Faça login para continuar</p>
+            </div>
+            <div class="pt-4">
+                <form method="post">
+                    {% csrf_token %}
+                    {% for error in form.non_field_errors %}
+                        <div class="alert alert-danger">{{ error }}</div>
+                    {% empty %}
+                    {% endfor %}
+                    <div class="pb-3">
+                        {{ form.username.errors }}
+                        <label for="id_username" class="form-label text-secondary">
+                            Username
+                        </label>
+                        <input class="form-control" type="text" name="username" autofocus="" autocapitalize="none"
+                            autocomplete="username" maxlength="150" required="" id="id_username" placeholder="">
+                    </div>
+                    <div class="pb-3">
+                        {{ form.password.errors }}
+                        <label for="id_password" class="form-label text-secondary">
+                            Password
+                        </label>
+                        <input class="form-control" type="password" name="password" autocomplete="current-password"
+                            required="" id="id_password" placeholder="">
+                    </div>
+                    <div class="pb-3 pt-2">
+                        <button class="btn btn-primary w-100" type="submit">Entrar</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</body>
+{% endblock %}
