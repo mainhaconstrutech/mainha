@@ -1,5 +1,7 @@
 # MAINHA APP
 
+## --- Python ---
+
 ### 1. Virtual Enviroment
 
 #### Create
@@ -26,3 +28,31 @@
 
 ### 6. Update requiments.txt
 > pip freeze > requirements.txt
+
+### 7. Create Super User
+> python manage.py createsuperuser
+
+## --- Docker ---
+
+### Create docker image
+> docker build -t mainhaconstrutech/mainha:v1 .
+
+### Update docker latest image
+> docker tag mainhaconstrutech/mainha:v1 mainhaconstrutech/mainha:latest
+
+### Login to Dockerhub
+> docker login
+
+### Logout to Dockerhub
+> docker logout
+
+### Push docker image to dockerhub
+> docker push mainhaconstrutech/mainha:latest
+
+## --- Envs ---
+
+### To run all app in container, use:
+DATABASE_HOST=host.docker.internal
+
+### To run app in local, use:
+DATABASE_HOST=localhost

@@ -1,0 +1,36 @@
+services:
+  mainha_db: 
+    image: postgres:18.1
+    ports:
+      - 5432:5432
+    environment:
+      POSTGRES_DB: ${DATABASE_NAME:-mainha_db}
+      POSTGRES_USER: ${DATABASE_USERNAME:-mainha}
+      POSTGRES_PASSWORD: ${DATABASE_PASSWORD:-mainha_pg_password_123}
+      POSTGRES_HOST_AUTH_METHOD: trust
+    volumes:
+      - mainha_db_data:/var/lib/postgresql
+    env_file: ".env"
+
+  mainha:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    depends_on:
+      - mainha_db
+    ports:
+      - 8000:8000
+    environment:
+      SECRET_KEY: ${DJANGO_SECRET_KEY}
+      DEBUG: ${DEBUG:-True}
+      DJANGO_ALLOWED_HOSTS: ${DJANGO_ALLOWED_HOSTS:-localhost,127.0.0.1}
+      DATABASE_ENGINE: ${DATABASE_ENGINE:-postgresql}
+      DATABASE_NAME: ${DATABASE_NAME:-mainha_db}
+      DATABASE_USERNAME: ${DATABASE_USERNAME:-mainha}
+      DATABASE_PASSWORD: ${DATABASE_PASSWORD:-mainha_pg_password_123}
+      DATABASE_HOST: ${DATABASE_HOST:-localhost}
+      DATABASE_PORT: ${DATABASE_PORT:-5432}
+    env_file: ".env"
+
+volumes:
+  mainha_db_data:
