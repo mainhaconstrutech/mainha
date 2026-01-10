@@ -1,4 +1,3 @@
-from django.shortcuts import render
 from django.urls import reverse_lazy
 
 from django.views.generic import TemplateView
@@ -6,18 +5,17 @@ from django.views.generic.list import ListView
 from django.views.generic.detail import DetailView
 from django.views.generic.edit import DeleteView, CreateView, UpdateView
 
-from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 
-from mainha.forms import ProjectForm
-
-from mainha.models import Project
+from mainha import forms as MainhaForms
+from mainha import models as MainhaModels
 
 class DashboardView(LoginRequiredMixin, TemplateView):
     template_name = "dashboard.html"
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        all_projects = Project.objects.filter(user=self.request.user).order_by("-updated_at")
+        all_projects = MainhaModels.Project.objects.filter(user=self.request.user).order_by("-updated_at")
         projects_all_total = all_projects.count()
         projects_success_total = all_projects.filter(status="success").count()
         projects_success_rate = projects_success_total / projects_all_total * 100 if projects_all_total != 0 else 0
@@ -30,15 +28,15 @@ class DashboardView(LoginRequiredMixin, TemplateView):
 
 
 class ProjectListView(LoginRequiredMixin, ListView):
-    model = Project
+    model = MainhaModels.Project
     template_name = "project/list.html"
 
     def get_queryset(self):
-        return Project.objects.filter(user=self.request.user)
+        return MainhaModels.Project.objects.filter(user=self.request.user)
 
 class ProjectCreateView(LoginRequiredMixin, CreateView):
-    model = Project
-    form_class = ProjectForm
+    model = MainhaModels.Project
+    form_class = MainhaForms.ProjectForm
     template_name = "project/create.html"
     success_url = reverse_lazy("project-list")
 
@@ -49,25 +47,58 @@ class ProjectCreateView(LoginRequiredMixin, CreateView):
         return response
 
 class ProjectDetailView(LoginRequiredMixin, DetailView):
-    model = Project
+    model = MainhaModels.Project
     template_name = "project/detail.html"
 
     def get_queryset(self):
-        return Project.objects.filter(user=self.request.user)
+        return MainhaModels.Project.objects.filter(user=self.request.user)
 
 class ProjectUpdateView(LoginRequiredMixin, UpdateView):
-    model = Project
-    form_class = ProjectForm
+    model = MainhaModels.Project
+    form_class = MainhaForms.ProjectForm
     template_name = "project/update.html"
     success_url = reverse_lazy("project-list")
 
     def get_queryset(self):
-        return Project.objects.filter(user=self.request.user)
+        return MainhaModels.Project.objects.filter(user=self.request.user)
 
 class ProjectDeleteView(LoginRequiredMixin, DeleteView):
-    model = Project
+    model = MainhaModels.Project
     template_name = "project/delete.html"
     success_url = reverse_lazy("project-list")
 
     def get_queryset(self):
-        return Project.objects.filter(user=self.request.user)
+        return MainhaModels.Project.objects.filter(user=self.request.user)
+    
+class StandardListView(LoginRequiredMixin, PermissionRequiredMixin, ListView):
+    model = MainhaModels.Standard
+    permission_required = 'is_staff'
+    template_name = "standard/list.html"
+
+    def get_queryset(self):
+        return MainhaModels.Standard.objects.all().order_by("-id")
+    
+class StandardCreateView(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
+    model = MainhaModels.Standard
+    form_class = MainhaForms.StandardForm
+    permission_required = 'is_staff'
+    template_name = "standard/create.html"
+    success_url = reverse_lazy("standard-list")
+
+class StandardDetailView(LoginRequiredMixin, PermissionRequiredMixin, DetailView):
+    model = MainhaModels.Standard
+    permission_required = 'is_staff'
+    template_name = "standard/detail.html"
+
+class StandardUpdateView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
+    model = MainhaModels.Standard
+    form_class = MainhaForms.StandardForm
+    permission_required = 'is_staff'
+    template_name = "standard/update.html"
+    success_url = reverse_lazy("standard-list")
+
+class StandardDeleteView(LoginRequiredMixin, PermissionRequiredMixin, DeleteView):
+    model = MainhaModels.Standard
+    permission_required = 'is_staff'
+    template_name = "standard/delete.html"
+    success_url = reverse_lazy("standard-list")

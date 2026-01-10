@@ -1,0 +1,68 @@
+{% extends '../base.html' %}
+{% load static %}
+
+{% block page_head %}
+{% endblock %}
+
+{% block page_title %}
+<span>Detalhes da norma</span>
+{% endblock %}
+
+{% block page_content %}
+<div>
+  <article>
+    <div class="page-group-title mb-3">
+      <div class="d-flex justify-content-between gap-2">
+        <div>Norma: <span class="fw-medium">{{ object.name }}</span></div>
+        <div class="dropdown">
+          <button class="btn btn-primary dropdown-toggle" type="button" data-bs-toggle="dropdown"
+            aria-expanded="false">
+            <span>Ações</span>
+          </button>
+          <ul class="dropdown-menu">
+            <li class="warning">
+              <a class="dropdown-item" href="{% url 'standard-update' object.pk %}">
+                <i class="fa-solid fa-pen-to-square fa-lg me-2"></i>
+                <span>Atualizar Norma</span>
+              </a>
+            </li>
+            <li class="danger">
+              <a class="dropdown-item" href="{% url 'standard-delete' object.pk %}">
+                <i class="fa-solid fa-trash-can fa-lg me-2"></i>
+                <span>Deletar Norma</span>
+              </a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="bg-white rounded-3 shadow-sm py-2">
+      <div class="p-3">
+        <div>
+          <div class="d-flex justify-content-between align-items-start">
+            <span class="fw-semibold fs-5">{{ object.name }}</span>
+          </div>
+          <div class="subtext text-nowrap">ID: {{ object.id }}</div>
+          <div class="subtext text-nowrap">Atualizado em: {{ object.updated_at|date:"d/m/Y H:i:s" }}</div>
+        </div>
+        <div class="divider py-3"></div>
+        <div class="accordion" id="accordionPanels">
+          <div class="accordion-item">
+            <h2 class="accordion-header">
+              <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                data-bs-target="#panels-collapseOne" aria-expanded="false" aria-controls="panels-collapseOne">
+                Descrição
+              </button>
+            </h2>
+            <div id="panels-collapseOne" class="accordion-collapse collapse">
+              <div class="accordion-body">
+                {{ object.description }}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </article>
+</div>
+{% endblock %}

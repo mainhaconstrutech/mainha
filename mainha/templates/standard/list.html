@@ -1,0 +1,50 @@
+{% extends '../base.html' %}
+{% load static %}
+
+{% block page_head %}
+{% endblock %}
+
+{% block page_title %}
+<span>Normas</span>
+{% endblock %}
+
+{% block page_content %}
+<div>
+  <article>
+    <div class="page-group-title mb-3">
+      <div class="d-flex justify-content-between">
+        <span>Normas</span>
+        <div>
+          <a class="btn btn-success rounded-3" href="{% url 'standard-create' %}">
+            <i class="fa-solid fa-file-circle-plus fa-lg me-2"></i>
+            <span>Nova Norma</span>
+          </a>
+        </div>
+      </div>
+    </div>
+    <div class="bg-white rounded-3 shadow-sm py-2">
+      {% for standard in standard_list %}
+      <a href="{% url 'standard-detail' pk=standard.id %}">
+        <div class="d-flex flex-row justify-content-between align-items-center list-item-container">
+          <div class="flex-grow-1 d-flex flex-column">
+            <h6 class="fw-semibold">{{ standard.name }}</h6>
+            <p class="subtext">{{ standard.updated_at|date:"d/m/Y H:i:s" }}</p>
+          </div>
+          <div>
+            <span class="ms-3">
+              <i class="fa-solid fa-chevron-right fa-xl"></i>
+            </span>
+          </div>
+        </div>
+      </a>
+      {% empty %}
+      <div class="d-flex flex-row justify-content-center align-items-center list-item-container">
+        <div class="alert alert-dark text-center py-4  w-100">
+          <p>Não há nenhuma norma cadastrada.</p>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </article>
+</div>
+{% endblock %}

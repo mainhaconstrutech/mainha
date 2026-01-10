@@ -7,6 +7,21 @@
                 <span>Dashboard</span>
             </a>
         </div>
+
+        {% if user.is_staff %}
+        <div class="menu-group">
+            <div class="menu-group-title mt-3 mb-1">NORMAS</div>
+            <a class="menu-item" href="{% url 'standard-create' %}">
+                <i class="fa-solid fa-clipboard-list fa-lg me-2"></i>
+                <span>Nova norma</span>
+            </a>
+            <a class="menu-item" href="{% url 'standard-list' %}">
+                <i class="fa-solid fa-box-archive fa-lg me-2"></i>
+                <span class="text-gray-800">Normas</span>
+            </a>
+        </div>
+        {% endif %}
+
         <div class="menu-group">
             <div class="menu-group-title mt-3 mb-1">PROJETOS</div>
             <a class="menu-item" href="{% url 'project-create' %}">

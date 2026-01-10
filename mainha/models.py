@@ -19,4 +19,24 @@ class Project(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, default=None)
 
     def __str__(self):
-        return self.name
+        return f"{self.id} - {self.name}"
+    
+class Standard(models.Model):
+    name = models.CharField(max_length=512)
+    description = models.TextField(blank=True, default="")
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return f"{self.id} - {self.name}"
+
+class StandardRule(models.Model):
+    name = models.CharField(max_length=512)
+    description = models.TextField(blank=True, default="")
+    group = models.CharField(max_length=256)
+    standard = models.ForeignKey(Standard, on_delete=models.CASCADE)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return f"{self.id} - {self.name}"
