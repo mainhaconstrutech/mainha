@@ -148,7 +148,7 @@ body main {
     background-color: var(--tag-bg-pending, #FF704333);
 }
 
-.success {
+.approved {
     color: var(--tag-font-success, #18865E);
     border: 1px solid var(--tag-font-success, #18865E);
     background-color: var(--tag-bg-success, #34D39933);

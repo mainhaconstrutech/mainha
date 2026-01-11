@@ -1,5 +1,7 @@
 from django.contrib import admin
 
-from .models import Project
+from mainha import models as MainhaModels
 
-admin.site.register(Project)
+admin.site.register(MainhaModels.Project)
+admin.site.register(MainhaModels.Standard)
+admin.site.register(MainhaModels.StandardRule)

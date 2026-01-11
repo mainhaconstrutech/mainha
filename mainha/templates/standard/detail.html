@@ -20,6 +20,12 @@
             <span>Ações</span>
           </button>
           <ul class="dropdown-menu">
+            <li class="success">
+              <a class="dropdown-item" href="{% url 'standard-rule-create' standard_id=object.pk %}">
+                <i class="fa-solid fa-check-to-slot fa-lg me-2"></i>
+                <span>Adicionar Critério da Norma</span>
+              </a>
+            </li>
             <li class="warning">
               <a class="dropdown-item" href="{% url 'standard-update' object.pk %}">
                 <i class="fa-solid fa-pen-to-square fa-lg me-2"></i>

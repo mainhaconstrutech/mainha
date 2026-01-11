@@ -148,7 +148,7 @@ body main {
     background-color: var(--tag-bg-pending, #FF704333);
 }
 
-.success {
+.approved {
     color: var(--tag-font-success, #18865E);
     border: 1px solid var(--tag-font-success, #18865E);
     background-color: var(--tag-bg-success, #34D39933);
@@ -211,20 +211,28 @@ body main {
 }
 
 .accordion {
-    --bs-accordion-btn-bg: var( --gray150, #E1E1E1);
-    --bs-accordion-active-bg: var( --gray250, #D1D5DB);
+    --bs-accordion-btn-bg: var(--gray150, #E1E1E1);
+    --bs-accordion-active-bg: var(--gray250, #D1D5DB);
     --bs-accordion-btn-focus-box-shadow: none;
 }
 
+.dropdown li.success {
+    --bs-dropdown-link-hover-color: var(--white, #FFFFFF);
+    --bs-dropdown-link-hover-bg: var(--btn-bg-success-hover, #157347);
+    --bs-dropdown-link-active-bg: var(--btn-bg-success-active, #146C43);
+    --bs-dropdown-link-active-color: var(--bs-body-color, #212529);
+    --bs-dropdown-link-active-color: var(--white, #FFFFFF);
+}
+
 .dropdown li.warning {
-    --bs-dropdown-link-hover-bg: var( --btn-bg-warning-hover, #FFCA2C);
+    --bs-dropdown-link-hover-bg: var(--btn-bg-warning-hover, #FFCA2C);
     --bs-dropdown-link-active-bg: var(--btn-bg-warning-active, #FFCD39);
     --bs-dropdown-link-active-color: var(--bs-body-color, #212529);
 }
 
 .dropdown li.danger {
-    --bs-dropdown-link-hover-color: var( --white, #FFFFFF);
-    --bs-dropdown-link-hover-bg: var( --btn-bg-danger-hover, #BB2D3B);
+    --bs-dropdown-link-hover-color: var(--white, #FFFFFF);
+    --bs-dropdown-link-hover-bg: var(--btn-bg-danger-hover, #BB2D3B);
     --bs-dropdown-link-active-bg: var(--btn-bg-danger-active, #B02A37);
     --bs-dropdown-link-active-color: var(--white, #FFFFFF);
 }

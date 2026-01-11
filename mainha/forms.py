@@ -1,48 +1,81 @@
 from django import forms
-from mainha import models
+from mainha import models as MainhaModels
+
 
 class ProjectForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.fields["name"].widget.attrs.update({"class": "form-control", "placeholder": "Nome do projeto"})
-        self.fields["description"].widget.attrs.update({"class": "form-control", "placeholder": "Descrição do projeto"})
+        self.fields["name"].widget.attrs.update({
+            "class": "form-control",
+            "placeholder": "Nome do projeto"
+        })
+        self.fields["description"].widget.attrs.update({
+            "class": "form-control",
+            "placeholder": "Descrição do projeto"
+        })
 
     class Meta:
-        model = models.Project
+        model = MainhaModels.Project
         fields = ["name", "description"]
         labels = {
             "name": "Nome",
             "description": "Descrição",
         }
+
 
 class StandardForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.fields["name"].widget.attrs.update({"class": "form-control", "placeholder": "Nome da norma"})
-        self.fields["description"].widget.attrs.update({"class": "form-control", "placeholder": "Descrição da norma"})
+        self.fields["name"].widget.attrs.update({
+            "class": "form-control",
+            "placeholder": "Nome da norma"
+        })
+        self.fields["description"].widget.attrs.update({
+            "class": "form-control",
+            "placeholder": "Descrição da norma"
+        })
 
     class Meta:
-        model = models.Standard
+        model = MainhaModels.Standard
         fields = ["name", "description"]
         labels = {
             "name": "Nome",
             "description": "Descrição",
         }
 
+
 class StandardRuleForm(forms.ModelForm):
+    standard = forms.ModelChoiceField(
+        queryset=MainhaModels.Standard.objects.all(),
+        widget=forms.HiddenInput(),
+        label="Norma"
+    )
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.fields["name"].widget.attrs.update({"class": "form-control", "placeholder": "Nome da norma"})
-        self.fields["description"].widget.attrs.update({"class": "form-control", "placeholder": "Descrição da norma"})
-        self.fields["group"].widget.attrs.update({"class": "form-control", "placeholder": "Hierarquia de organização"})
-        self.fields["standard"].widget.attrs.update({"class": "form-control", "placeholder": "Norma"})
-        
+        self.fields["name"].widget.attrs.update({
+            "class": "form-control",
+            "placeholder": "Nome do Critério da Norma"
+        })
+        self.fields["description"].widget.attrs.update({
+            "class": "form-control",
+            "placeholder": "Descrição do Critério da Norma"
+        })
+        self.fields["group"].widget.attrs.update({
+            "class": "form-control",
+            "placeholder": "Hierarquia de organização"
+        })
+        self.fields["standard"].widget.attrs.update({
+            "class": "form-control",
+            "placeholder": "Norma",
+            "value": kwargs["initial"]["standard_id"]
+        })
+
     class Meta:
-        model = models.StandardRule
+        model = MainhaModels.StandardRule
         fields = ["name", "description", "group", "standard"]
         labels = {
             "name": "Nome",
             "description": "Descrição",
             "group": "Hierarquia de organização",
-            "standard": "Norma",
         }

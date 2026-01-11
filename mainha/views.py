@@ -102,3 +102,20 @@ class StandardDeleteView(LoginRequiredMixin, PermissionRequiredMixin, DeleteView
     permission_required = 'is_staff'
     template_name = "standard/delete.html"
     success_url = reverse_lazy("standard-list")
+
+class StandardRuleCreateView(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
+    model = MainhaModels.StandardRule
+    form_class = MainhaForms.StandardRuleForm
+    permission_required = 'is_staff'
+    template_name = "standard_rule/create.html"
+    success_url = reverse_lazy("standard-list")
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["standard_id"] = self.kwargs["standard_id"]
+        return context
+
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs["initial"].update({"standard_id": self.kwargs["standard_id"]})
+        return kwargs

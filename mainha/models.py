@@ -8,7 +8,7 @@ class Project(models.Model):
         "archived": "Archived",
         "failed": "Failed",
         "pending": "Pending",
-        "success": "Success"
+        "approved": "Approved"
     }
 
     name = models.CharField(max_length=512)
@@ -33,7 +33,7 @@ class Standard(models.Model):
 class StandardRule(models.Model):
     name = models.CharField(max_length=512)
     description = models.TextField(blank=True, default="")
-    group = models.CharField(max_length=256)
+    group = models.CharField(max_length=256, blank=True, default="")
     standard = models.ForeignKey(Standard, on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
