@@ -64,10 +64,12 @@ class ProjectUpdateView(LoginRequiredMixin, UpdateView):
     model = MainhaModels.Project
     form_class = MainhaForms.ProjectForm
     template_name = "project/update.html"
-    success_url = reverse_lazy("project-list")
 
     def get_queryset(self):
         return MainhaModels.Project.objects.filter(user=self.request.user)
+
+    def get_success_url(self):
+        return reverse('project-detail', kwargs=self.kwargs)
 
 
 class ProjectDeleteView(LoginRequiredMixin, DeleteView):
@@ -121,7 +123,9 @@ class StandardUpdateView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView
     form_class = MainhaForms.StandardForm
     permission_required = 'is_staff'
     template_name = "standard/update.html"
-    success_url = reverse_lazy("standard-list")
+
+    def get_success_url(self):
+        return reverse('standard-detail', kwargs=self.kwargs)
 
 
 class StandardDeleteView(LoginRequiredMixin, PermissionRequiredMixin, DeleteView):
@@ -144,7 +148,9 @@ class StandardRuleCreateView(LoginRequiredMixin, PermissionRequiredMixin, Create
 
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
-        kwargs["initial"].update({"standard_id": self.kwargs["standard_id"]})
+        standard = MainhaModels.Standard.objects.get(
+            pk=self.kwargs["standard_id"])
+        kwargs["initial"].update({"standard": standard.id})
         return kwargs
 
     def get_success_url(self):

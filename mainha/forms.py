@@ -69,10 +69,6 @@ class StandardRuleForm(forms.ModelForm):
             "class": "form-control",
             "placeholder": "Norma"
         })
-        if kwargs["initial"] and kwargs["initial"]["standard_id"]:
-            self.fields["standard"].widget.attrs.update({
-                "value": kwargs["initial"]["standard_id"]
-            })
 
     class Meta:
         model = MainhaModels.StandardRule
