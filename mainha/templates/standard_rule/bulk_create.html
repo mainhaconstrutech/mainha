@@ -5,13 +5,13 @@
 {% endblock %}
 
 {% block page_title %}
-<span>Nova Critério de Norma</span>
+<span>Novos Critérios de Norma</span>
 {% endblock %}
 
 {% block page_content %}
 <div>
   <article>
-    <div class="page-group-title mb-3">Nova Critério de Norma</div>
+    <div class="page-group-title mb-3">Novos Critérios de Norma</div>
     <div class="bg-white rounded-3 shadow-sm py-2">
       <div class="m-3">
         <form method="post">
@@ -37,7 +37,7 @@
             </a>
             <button class="btn btn-success py-2 px-3" type="submit">
               <i class="fa-solid fa-check fa-lg me-2"></i>
-              <span>Criar Critério de Norma</span>
+              <span>Criar Critérios de Norma</span>
             </button>
           </div>
         </form>
@@ -45,4 +45,15 @@
     </div>
   </article>
 </div>
+{% endblock %}
+
+{% block page_scripts %}
+<script>
+    let text_area_element = document.getElementById("id_standard_rules")
+
+    text_area_element.placeholder = '[{"name": "Nome do critério", "description": "Descrição", "group": "Hierarquia de organização"}]';
+    if (text_area_element.innerHTML == "null") {
+        text_area_element.innerHTML = ""
+    }
+</script>
 {% endblock %}

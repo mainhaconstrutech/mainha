@@ -1,4 +1,6 @@
 from django import forms
+from django.core.exceptions import ValidationError
+
 from mainha import models as MainhaModels
 
 
@@ -78,3 +80,32 @@ class StandardRuleForm(forms.ModelForm):
             "description": "Descrição",
             "group": "Hierarquia de organização",
         }
+
+
+class StandardRuleBulkForm(forms.Form):
+    standard = forms.ModelChoiceField(
+        queryset=MainhaModels.Standard.objects.all(),
+        widget=forms.HiddenInput(),
+        label="Norma"
+    )
+    standard_rules = forms.JSONField(label="Critérios da norma")
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields["standard_rules"].widget.attrs.update({
+            "class": "form-control",
+        })
+        self.fields["standard"].widget.attrs.update({
+            "class": "form-control",
+            "placeholder": "Norma"
+        })
+
+    def clean_standard_rules(self):
+        standard_rules_data = self.cleaned_data["standard_rules"]
+        if not type(standard_rules_data) is list:
+            raise ValidationError("Enter a valid JSON.")
+        else:
+            for standard_rule in standard_rules_data:
+                if not "name" in standard_rule:
+                    raise ValidationError("Enter a valid JSON.")
+        return standard_rules_data

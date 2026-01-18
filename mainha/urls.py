@@ -17,6 +17,7 @@ urlpatterns = [
     path("standards/<slug:pk>/edit/", MainhaViews.StandardUpdateView.as_view(), name="standard-update"),
     path("standards/<slug:pk>/delete/", MainhaViews.StandardDeleteView.as_view(), name="standard-delete"),
     path("standards/<slug:standard_id>/standard-rule/new/", MainhaViews.StandardRuleCreateView.as_view(), name="standard-rule-create"),
+    path("standards/<slug:standard_id>/standard-rule/bulk-new/", MainhaViews.StandardRuleBulkCreateView.as_view(), name="standard-rule-bulk-create"),
     path("standards/<slug:standard_id>/standard-rule/<slug:pk>/", MainhaViews.StandardRuleDetailView.as_view(), name="standard-rule-detail"),
     path("standards/<slug:standard_id>/standard-rule/<slug:pk>/edit/", MainhaViews.StandardRuleUpdateView.as_view(), name="standard-rule-update"),
     path("standards/<slug:standard_id>/standard-rule/<slug:pk>/delete/", MainhaViews.StandardRuleDeleteView.as_view(), name="standard-rule-delete"),
