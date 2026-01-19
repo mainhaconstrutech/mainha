@@ -50,14 +50,14 @@
         <div class="accordion mainha-accordion" id="accordionPanels">
           <div class="accordion-item">
             <h2 class="accordion-header">
-              <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
-                data-bs-target="#panels-collapseOne" aria-expanded="false" aria-controls="panels-collapseOne">
+              <button class="accordion-button" type="button" data-bs-toggle="collapse"
+                data-bs-target="#panels-collapseOne" aria-expanded="true" aria-controls="panels-collapseOne">
                 Descrição
               </button>
             </h2>
-            <div id="panels-collapseOne" class="accordion-collapse collapse">
+            <div id="panels-collapseOne" class="accordion-collapse collapse show">
               <div class="accordion-body">
-                {{ object.description }}
+                <textarea name="description" cols="40" rows="10" class="form-control" disabled>{{ object.description }}</textarea>
               </div>
             </div>
           </div>

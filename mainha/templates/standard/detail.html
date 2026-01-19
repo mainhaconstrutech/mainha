@@ -62,7 +62,7 @@
             </h2>
             <div id="panels-collapseDescription" class="accordion-collapse collapse">
               <div class="accordion-body">
-                {{ object.description }}
+                <textarea name="description" cols="40" rows="15" class="form-control" disabled>{{ object.description }}</textarea>
               </div>
             </div>
           </div>
@@ -89,7 +89,7 @@
                               <li class="list-group-item d-flex justify-content-between align-items-start">
                                 <div class="ms-2 me-auto">
                                   <div class="fw-bold">{{ standard_rule.name }}</div>
-                                  <p style="font-size: 0.875rem">{{ standard_rule.description }}</p>
+                                  <div style="font-size: 0.825rem">{{ standard_rule.description|linebreaks }}</div>
                                 </div>
                               </li>
                             </a>
