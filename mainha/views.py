@@ -171,7 +171,7 @@ class StandardRuleBulkCreateView(LoginRequiredMixin, PermissionRequiredMixin, Fo
         context = super().get_context_data(**kwargs)
         context["standard_id"] = self.kwargs["standard_id"]
         return context
-    
+
     def form_valid(self, form):
         standard = form.cleaned_data["standard"]
         standard_rules = []
@@ -212,3 +212,15 @@ class StandardRuleDeleteView(LoginRequiredMixin, PermissionRequiredMixin, Delete
 
     def get_success_url(self):
         return reverse('standard-detail', kwargs={'pk': self.kwargs['standard_id']})
+
+
+class ValidationCreateView(LoginRequiredMixin, CreateView):
+    model = MainhaModels.Validation
+    form_class = MainhaForms.ValidationForm
+    template_name = "validation/create.html"
+    success_url = reverse_lazy("project-list")
+
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs["initial"].update({"user": self.request.user})
+        return kwargs

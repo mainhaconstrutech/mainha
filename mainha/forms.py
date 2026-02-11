@@ -109,3 +109,32 @@ class StandardRuleBulkForm(forms.Form):
                 if not "name" in standard_rule:
                     raise ValidationError("Enter a valid JSON.")
         return standard_rules_data
+
+class ValidationForm(forms.ModelForm):
+    project = forms.ModelChoiceField(
+        queryset=MainhaModels.Project.objects.none(),
+        label="Projeto"
+    )
+
+    standard = forms.ModelChoiceField(
+        queryset=MainhaModels.Standard.objects.all(),
+        required=True,
+        label="Norma"
+    )
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        user = kwargs.get('initial').get('user')
+        self.fields["project"].queryset = MainhaModels.Project.objects.filter(user=user).all()
+        self.fields["project"].widget.attrs.update({
+            "class": "form-control",
+            "placeholder": "Projeto"
+        })
+        self.fields["standard"].widget.attrs.update({
+            "class": "form-control",
+            "placeholder": "Norma"
+        })
+
+    class Meta:
+        model = MainhaModels.Validation
+        fields = ["project", "standard"]
