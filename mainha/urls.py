@@ -9,6 +9,7 @@ urlpatterns = [
     path("projects/", MainhaViews.ProjectListView.as_view(), name="project-list"),
     path("projects/new/", MainhaViews.ProjectCreateView.as_view(), name="project-create"),
     path("projects/<slug:pk>/", MainhaViews.ProjectDetailView.as_view(), name="project-detail"),
+    path("projects/<slug:pk>/validation/new/", MainhaViews.ValidationCreateForProjectView.as_view(), name="project-validation-create"),
     path("projects/<slug:pk>/edit/", MainhaViews.ProjectUpdateView.as_view(), name="project-update"),
     path("projects/<slug:pk>/delete/", MainhaViews.ProjectDeleteView.as_view(), name="project-delete"),
     path("standards/", MainhaViews.StandardListView.as_view(), name="standard-list"),
@@ -21,5 +22,5 @@ urlpatterns = [
     path("standards/<slug:standard_id>/standard-rule/<slug:pk>/", MainhaViews.StandardRuleDetailView.as_view(), name="standard-rule-detail"),
     path("standards/<slug:standard_id>/standard-rule/<slug:pk>/edit/", MainhaViews.StandardRuleUpdateView.as_view(), name="standard-rule-update"),
     path("standards/<slug:standard_id>/standard-rule/<slug:pk>/delete/", MainhaViews.StandardRuleDeleteView.as_view(), name="standard-rule-delete"),
-    path("validation/", MainhaViews.ValidationCreateView.as_view(), name="validation-create"),
+    path("validation/new/", MainhaViews.ValidationCreateView.as_view(), name="validation-create"),
 ]

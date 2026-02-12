@@ -224,3 +224,21 @@ class ValidationCreateView(LoginRequiredMixin, CreateView):
         kwargs = super().get_form_kwargs()
         kwargs["initial"].update({"user": self.request.user})
         return kwargs
+
+
+class ValidationCreateForProjectView(LoginRequiredMixin, CreateView):
+    model = MainhaModels.Validation
+    form_class = MainhaForms.ValidationForm
+    template_name = "validation/create_for_project.html"
+    success_url = reverse_lazy("project-list")
+
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs["initial"].update({"user": self.request.user})
+        kwargs["initial"].update({"project": self.kwargs["pk"]})
+        return kwargs
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["project"] = MainhaModels.Project.objects.get(pk=self.kwargs["pk"])
+        return context

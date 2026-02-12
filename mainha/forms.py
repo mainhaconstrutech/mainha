@@ -110,22 +110,32 @@ class StandardRuleBulkForm(forms.Form):
                     raise ValidationError("Enter a valid JSON.")
         return standard_rules_data
 
+
 class ValidationForm(forms.ModelForm):
     project = forms.ModelChoiceField(
         queryset=MainhaModels.Project.objects.none(),
+        empty_label="--- Selecione um projeto ---",
         label="Projeto"
     )
 
     standard = forms.ModelChoiceField(
         queryset=MainhaModels.Standard.objects.all(),
         required=True,
+        empty_label="--- Selecione uma norma ---",
         label="Norma"
     )
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         user = kwargs.get('initial').get('user')
-        self.fields["project"].queryset = MainhaModels.Project.objects.filter(user=user).all()
+        project_id = kwargs.get('initial').get('project')
+
+        if project_id is None:
+            projects = MainhaModels.Project.objects.filter(user=user).all()
+        else:
+            projects = MainhaModels.Project.objects.filter(pk=project_id, user=user).all()
+
+        self.fields["project"].queryset = projects
         self.fields["project"].widget.attrs.update({
             "class": "form-control",
             "placeholder": "Projeto"
