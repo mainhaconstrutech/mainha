@@ -1,0 +1,53 @@
+{% extends '../base.html' %}
+{% load static %}
+
+{% block page_head %}
+{% endblock %}
+
+{% block page_title %}
+<span>Análise de projetos</span>
+{% endblock %}
+
+{% block page_content %}
+<div>
+  <article>
+    <div class="page-group-title mb-3">
+      <div class="d-flex flex-column">
+        <span>Análise de projetos</span>
+        <span class="fs-6 pt-2">Escolha um projeto para analisar:</span>
+      </div>
+    </div>
+    <div class="bg-white rounded-3 shadow-sm py-2">
+      {% for validation in validation_list %}
+      {% comment %} <a href="{% url 'project-detail' pk=project.id %}"> {% endcomment %}
+      <a href="#">
+        <div class="d-flex flex-row justify-content-between align-items-center list-item-container">
+          <div class="flex-grow-1 d-flex flex-column">
+            <h6 class="fw-semibold">
+                <span class="fw-normal">Projeto: </span>{{ validation.project.name }}
+            </h6>
+            <h6 class="fw-semibold">
+                <span class="fw-normal">Norma: </span>
+                {{ validation.standard.name }}
+            </h6>
+            <p class="subtext">{{ validation.created_at|date:"d/m/Y H:i:s" }}</p>
+          </div>
+          <div>
+            <span class="status-tag text-nowrap rounded-pill {{validation.status}}">{{ validation.status }}</span>
+            <span class="ms-3">
+              <i class="fa-solid fa-chevron-right fa-xl"></i>
+            </span>
+          </div>
+        </div>
+      </a>
+      {% empty %}
+      <div class="d-flex flex-row justify-content-center align-items-center list-item-container">
+        <div class="alert alert-dark text-center py-4  w-100">
+          <p>Não há projetos à serem analisados.</p>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </article>
+</div>
+{% endblock %}

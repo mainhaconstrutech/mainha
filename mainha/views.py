@@ -215,6 +215,15 @@ class StandardRuleDeleteView(LoginRequiredMixin, PermissionRequiredMixin, Delete
         return reverse('standard-detail', kwargs={'pk': self.kwargs['standard_id']})
 
 
+class ValidationListView(LoginRequiredMixin, PermissionRequiredMixin, ListView):
+    model = MainhaModels.Validation
+    permission_required = 'is_staff'
+    template_name = "validation/list.html"
+
+    def get_queryset(self):
+        return MainhaModels.Validation.objects.filter(analyzed=False, analyzed_by=None).order_by("id")
+
+
 class ValidationCreateView(LoginRequiredMixin, CreateView):
     model = MainhaModels.Validation
     form_class = MainhaForms.ValidationForm
@@ -311,7 +320,7 @@ class ValidationAnalysisView(LoginRequiredMixin, PermissionRequiredMixin, FormVi
                 validation.analyzed = True
                 validation.set_analysis_result()
                 validation.save()
- 
+
             return redirect('index')
         else:
             standard_rules = MainhaModels.StandardRule.objects.filter(standard_id=validation.standard.id)
