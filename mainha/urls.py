@@ -23,4 +23,5 @@ urlpatterns = [
     path("standards/<slug:standard_id>/standard-rule/<slug:pk>/edit/", MainhaViews.StandardRuleUpdateView.as_view(), name="standard-rule-update"),
     path("standards/<slug:standard_id>/standard-rule/<slug:pk>/delete/", MainhaViews.StandardRuleDeleteView.as_view(), name="standard-rule-delete"),
     path("validation/new/", MainhaViews.ValidationCreateView.as_view(), name="validation-create"),
+    path("validation/<slug:pk>/analysis/", MainhaViews.ValidationAnalysisView.as_view(), name="validation-analysis"),
 ]

@@ -61,5 +61,21 @@ class Validation(models.Model):
 
     def __str__(self):
         standard_name = 'standard_not_found'
-        if self.standard: standard_name = self.standard.name
+        if self.standard:
+            standard_name = self.standard.name
         return f"{self.id} - {self.project.name} <> {standard_name}"
+
+
+class ValidationRule(models.Model):
+    validation = models.ForeignKey(Validation, on_delete=models.CASCADE)
+    standard_rule = models.ForeignKey(StandardRule, null=True, on_delete=models.SET_NULL)
+    fulfilled = models.BooleanField(null=True, default=None)
+    note = models.TextField(null=True, blank=True, default=None)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        standard_rule_name = 'standard_rule_not_found'
+        if self.standard_rule:
+            standard_rule_name = self.standard_rule.name
+        return f"{self.id} - {self.validation.name}:{standard_rule_name}"

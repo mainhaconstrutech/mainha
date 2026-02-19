@@ -148,3 +148,45 @@ class ValidationForm(forms.ModelForm):
     class Meta:
         model = MainhaModels.Validation
         fields = ["project", "standard"]
+
+
+class ValidationRuleForm(forms.ModelForm):
+    validation = forms.ModelChoiceField(
+        queryset=MainhaModels.Validation.objects.all(),
+        widget=forms.HiddenInput(),
+        label="Análise de projeto"
+    )
+
+    standard_rule = forms.ModelChoiceField(
+        queryset=MainhaModels.StandardRule.objects.all(),
+        widget=forms.HiddenInput(),
+        required=True,
+        label="Critério da norma"
+    )
+
+    fulfilled = forms.BooleanField(
+        widget=forms.CheckboxInput(),
+        required=False,
+        label="Cumprido?"
+    )
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields["fulfilled"].widget.attrs.update({
+            "class": "form-check-input",
+            "role": "switch",
+            "placeholder": "Cumprido?"
+        })
+        self.fields["note"].widget.attrs.update({
+            "class": "form-control",
+            "rows": 2,
+            "placeholder": "Observações..."
+        })
+
+    class Meta:
+        model = MainhaModels.ValidationRule
+        fields = ["validation", "standard_rule", "fulfilled", "note"]
+        labels = {
+            "fulfilled": "Cumprido?",
+            "note": "Observação",
+        }

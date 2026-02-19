@@ -1,4 +1,6 @@
 from django.urls import reverse_lazy, reverse
+from django.forms import formset_factory
+from django.shortcuts import render, redirect
 
 from django.views.generic import TemplateView
 from django.views.generic.list import ListView
@@ -242,3 +244,75 @@ class ValidationCreateForProjectView(LoginRequiredMixin, CreateView):
         context = super().get_context_data(**kwargs)
         context["project"] = MainhaModels.Project.objects.get(pk=self.kwargs["pk"])
         return context
+
+
+class ValidationAnalysisView(LoginRequiredMixin, PermissionRequiredMixin, FormView):
+    form_class = MainhaForms.ValidationRuleForm
+    permission_required = 'is_staff'
+    template_name = "validation/analysis.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        validation = MainhaModels.Validation.objects.get(pk=self.kwargs["pk"])
+        standard_rules = MainhaModels.StandardRule.objects.filter(standard_id=validation.standard.id)
+
+        initial_values = []
+        for standard_rule in standard_rules:
+            validation_rule = MainhaModels.ValidationRule.objects.filter(
+                validation_id=validation.id,
+                standard_rule_id=standard_rule.id
+            ).first()
+
+            value = {
+                "validation": validation,
+                "standard_rule": standard_rule,
+                "fulfilled": False
+            }
+
+            if validation_rule is not None:
+                value["fulfilled"] = validation_rule.fulfilled
+                value["note"] = validation_rule.note
+
+            initial_values.append(value)
+
+        ValidationRuleFormSet = formset_factory(MainhaForms.ValidationRuleForm, extra=0)
+        formset = ValidationRuleFormSet(initial=initial_values)
+
+        context["standard_rules"] = standard_rules
+        context["project"] = validation.project
+        context["standard"] = validation.standard
+        context["formset"] = formset
+
+        return context
+
+    def post(self, request, *args, **kwargs):
+        ValidationRuleFormSet = formset_factory(MainhaForms.ValidationRuleForm, extra=0)
+        formset = ValidationRuleFormSet(request.POST)
+
+        if formset.is_valid():
+            for form in formset:
+                form_data = form.cleaned_data
+                validation_rule = MainhaModels.ValidationRule.objects.filter(
+                    validation_id=form_data["validation"],
+                    standard_rule_id=form_data["standard_rule"]
+                ).first()
+
+                if form_data:
+                    if validation_rule is not None:
+                        new_form = MainhaForms.ValidationRuleForm(form_data, instance=validation_rule)
+                        new_form.save()
+                    else:
+                        form.save()
+ 
+            return redirect('index')
+        else:
+            validation = MainhaModels.Validation.objects.get(pk=kwargs["pk"])
+            standard_rules = MainhaModels.StandardRule.objects.filter(standard_id=validation.standard.id)
+
+            return render(request, "validation/analysis.html", {
+                "standard_rules": standard_rules,
+                "project": validation.project,
+                "standard": validation.standard,
+                "formset": formset
+            })
