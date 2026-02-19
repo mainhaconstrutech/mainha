@@ -224,6 +224,15 @@ class ValidationListView(LoginRequiredMixin, PermissionRequiredMixin, ListView):
         return MainhaModels.Validation.objects.filter(analyzed=False, analyzed_by=None).order_by("id")
 
 
+class ValidationInProgressListView(LoginRequiredMixin, PermissionRequiredMixin, ListView):
+    model = MainhaModels.Validation
+    permission_required = 'is_staff'
+    template_name = "validation/in_progress_list.html"
+
+    def get_queryset(self):
+        return MainhaModels.Validation.objects.filter(analyzed=False, analyzed_by=self.request.user).order_by("id")
+
+
 class ValidationCreateView(LoginRequiredMixin, CreateView):
     model = MainhaModels.Validation
     form_class = MainhaForms.ValidationForm
