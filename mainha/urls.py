@@ -25,5 +25,6 @@ urlpatterns = [
     path("validations/", MainhaViews.ValidationListView.as_view(), name="validation-list"),
     path("validations/new/", MainhaViews.ValidationCreateView.as_view(), name="validation-create"),
     path("validations/in-progress/", MainhaViews.ValidationInProgressListView.as_view(), name="validation-in-progress-list"),
+    path("validations/<slug:pk>/set-operator/", MainhaViews.ValidationSetOperatorView.as_view(), name="validation-set-operator"),
     path("validations/<slug:pk>/analysis/", MainhaViews.ValidationAnalysisView.as_view(), name="validation-analysis"),
 ]

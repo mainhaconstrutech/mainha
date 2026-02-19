@@ -19,8 +19,7 @@
     </div>
     <div class="bg-white rounded-3 shadow-sm py-2">
       {% for validation in validation_list %}
-      {% comment %} <a href="{% url 'project-detail' pk=project.id %}"> {% endcomment %}
-      <a href="#">
+      <a href="{% url 'validation-set-operator' pk=validation.id %}">
         <div class="d-flex flex-row justify-content-between align-items-center list-item-container">
           <div class="flex-grow-1 d-flex flex-column">
             <h6 class="fw-semibold">

@@ -3,6 +3,7 @@ from django.forms import formset_factory
 from django.shortcuts import render, redirect
 
 from django.views.generic import TemplateView
+from django.views.generic.base import View
 from django.views.generic.list import ListView
 from django.views.generic.detail import DetailView
 from django.views.generic.edit import DeleteView, CreateView, UpdateView, FormView
@@ -263,6 +264,17 @@ class ValidationCreateForProjectView(LoginRequiredMixin, CreateView):
         return context
 
 
+class ValidationSetOperatorView(LoginRequiredMixin, PermissionRequiredMixin, View):
+    permission_required = 'is_staff'
+
+    def get(self, request, *args, **kwargs):
+        validation = MainhaModels.Validation.objects.get(pk=self.kwargs["pk"])
+        validation.analyzed_by = request.user
+        validation.save()
+
+        return redirect('validation-analysis', pk=validation.id)
+
+
 class ValidationAnalysisView(LoginRequiredMixin, PermissionRequiredMixin, FormView):
     form_class = MainhaForms.ValidationRuleForm
     permission_required = 'is_staff'
@@ -325,7 +337,7 @@ class ValidationAnalysisView(LoginRequiredMixin, PermissionRequiredMixin, FormVi
                         form.save()
 
             if request.POST.get('submit') == 'save-end':
-                validation.analyzed_by = request.user
+                # validation.analyzed_by = request.user
                 validation.analyzed = True
                 validation.set_analysis_result()
                 validation.save()
