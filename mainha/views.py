@@ -116,7 +116,6 @@ class StandardDetailView(LoginRequiredMixin, PermissionRequiredMixin, DetailView
 
         context["standard_rules"] = standard_rules
         context["groups"] = groups
-        print(groups)
         return context
 
 
@@ -264,17 +263,17 @@ class ValidationAnalysisView(LoginRequiredMixin, PermissionRequiredMixin, FormVi
                 standard_rule_id=standard_rule.id
             ).first()
 
-            value = {
+            initial_value = {
                 "validation": validation,
                 "standard_rule": standard_rule,
                 "fulfilled": False
             }
 
             if validation_rule is not None:
-                value["fulfilled"] = validation_rule.fulfilled
-                value["note"] = validation_rule.note
+                initial_value["fulfilled"] = validation_rule.fulfilled
+                initial_value["note"] = validation_rule.note
 
-            initial_values.append(value)
+            initial_values.append(initial_value)
 
         ValidationRuleFormSet = formset_factory(MainhaForms.ValidationRuleForm, extra=0)
         formset = ValidationRuleFormSet(initial=initial_values)
@@ -287,6 +286,8 @@ class ValidationAnalysisView(LoginRequiredMixin, PermissionRequiredMixin, FormVi
         return context
 
     def post(self, request, *args, **kwargs):
+        validation = MainhaModels.Validation.objects.get(pk=kwargs["pk"])
+
         ValidationRuleFormSet = formset_factory(MainhaForms.ValidationRuleForm, extra=0)
         formset = ValidationRuleFormSet(request.POST)
 
@@ -304,10 +305,15 @@ class ValidationAnalysisView(LoginRequiredMixin, PermissionRequiredMixin, FormVi
                         new_form.save()
                     else:
                         form.save()
+
+            if request.POST.get('submit') == 'save-end':
+                validation.analyzed_by = request.user
+                validation.analyzed = True
+                validation.set_analysis_result()
+                validation.save()
  
             return redirect('index')
         else:
-            validation = MainhaModels.Validation.objects.get(pk=kwargs["pk"])
             standard_rules = MainhaModels.StandardRule.objects.filter(standard_id=validation.standard.id)
 
             return render(request, "validation/analysis.html", {

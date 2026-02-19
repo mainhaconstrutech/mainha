@@ -49,16 +49,22 @@
                     {% endif %}
                 {% endfor %}
             </div>
-            <hr class="pb-4">
+            {% if not forloop.last %}
+              <hr class="pb-4">
+            {% endif %}
           {% endfor %}
           <div class="d-flex justify-content-end gap-3 mt-2">
             <a class="btn btn-secondary py-2 px-3" href="{% url 'index' %}">
               <i class="fa-solid fa-xmark fa-lg me-2"></i>
               <span>Cancelar</span>
             </a>
-            <button class="btn btn-success py-2 px-3" type="submit">
+            <button class="btn btn-primary py-2 px-3" type="submit" name="submit" value="save-only">
               <i class="fa-solid fa-check fa-lg me-2"></i>
-              <span>Salvar Análise do Projeto</span>
+              <span>Salvar</span>
+            </button>
+            <button class="btn btn-success py-2 px-3" type="submit" name="submit" value="save-end">
+              <i class="fa-solid fa-check fa-lg me-2"></i>
+              <span>Salvar e Finalizar</span>
             </button>
           </div>
         </form>

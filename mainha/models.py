@@ -56,6 +56,8 @@ class Validation(models.Model):
     project = models.ForeignKey(Project, on_delete=models.CASCADE)
     standard = models.ForeignKey(Standard, null=True, on_delete=models.SET_NULL)
     status = models.CharField(max_length=64, choices=STATUS_CHOICES, default="analysis")
+    analyzed = models.BooleanField(null=False, default=False)
+    analyzed_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, default=None)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -64,6 +66,14 @@ class Validation(models.Model):
         if self.standard:
             standard_name = self.standard.name
         return f"{self.id} - {self.project.name} <> {standard_name}"
+    
+    def set_analysis_result(self):
+        self.status = "approved"
+        for validation_rule in self.validationrule_set.all():
+            if validation_rule.fulfilled == False:
+                self.status = "failed"
+                break
+        return self
 
 
 class ValidationRule(models.Model):

@@ -5,8 +5,6 @@ register = template.Library()
 
 @register.filter(name="find_item")
 def find_item(itens_list, id):
-    print(itens_list)
-    print(id)
     for item in itens_list:
         if item.id == id:
             return item
