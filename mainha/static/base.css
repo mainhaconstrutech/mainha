@@ -260,3 +260,8 @@ body main {
     --bs-dropdown-link-active-bg: var(--btn-bg-danger-active, #B02A37);
     --bs-dropdown-link-active-color: var(--white, #FFFFFF);
 }
+
+.offcanvas-validation-helper {
+    --bs-offcanvas-bg: var(--gray100);
+    --bs-offcanvas-color: var(--blue800, #1A202C);
+}

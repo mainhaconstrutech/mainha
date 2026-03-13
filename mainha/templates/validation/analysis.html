@@ -31,12 +31,38 @@
                         {{ field.errors }}
                         <!-- {{ field.label_tag }} -->
                         {% if field.name == "fulfilled" %}
-                            <div class="form-check form-switch col-12">
-                                {{ field }}
-                                <label for="{{ field.id_for_label }}" class="form-label text-secondary">
-                                    {{ standard_rules|find_item:form.standard_rule.value|get_standard_rule_name }}
-                                    {% comment %} <a href="#" data-bs-toggle="tooltip" data-bs-title="{{ standard_rules|find_item:form.standard_rule.value|get_standard_rule_description }}">!</a> {% endcomment %}
-                                </label>
+                            <div class="d-flex justify-content-between align-items-top col-12">
+                              <div class="form-check form-switch">
+                                  {{ field }}
+                                  <label for="{{ field.id_for_label }}" class="form-label text-secondary">
+                                      {{ standard_rules|find_item:form.standard_rule.value|get_standard_rule_name }}
+                                  </label>
+                              </div>
+                              <div>
+                                <a class="btn border-0 p-0 m-0" data-bs-toggle="offcanvas" role="button" 
+                                  href="#{{ field.id_for_label }}-offcanvas" aria-controls="{{ field.id_for_label }}-offcanvas">
+                                  <i class="fa-solid fa-circle-info fa-lg" ></i>
+                                </a>
+                              </div>
+                            </div>
+
+                            {% comment %} Offcanvas Helper {% endcomment %}
+                            <div class="offcanvas offcanvas-end offcanvas-validation-helper" tabindex="-1"
+                              id="{{ field.id_for_label }}-offcanvas" aria-labelledby="offcanvas-{{ field.id_for_label }}-label">
+                              <div class="offcanvas-header">
+                                <h5 class="offcanvas-title" id="offcanvas-{{ field.id_for_label }}-label">
+                                  {{ standard_rules|find_item:form.standard_rule.value|get_standard_rule_name }}
+                                </h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+                              </div>
+                              <div class="offcanvas-body">
+                                <div>
+                                  <textarea class="form-control" rows="35"
+                                    id="{{ field.id_for_label }}-offcanvas-textarea-id" 
+                                    name="{{ field.id_for_label }}-offcanvas-textarea-name"
+                                  >{{ standard_rules|find_item:form.standard_rule.value|get_standard_rule_description }}</textarea>
+                                </div>
+                              </div>
                             </div>
                         {% else %}
                             <div class="col-12">
