@@ -1,0 +1,97 @@
+{% extends '../base.html' %}
+{% load static %}
+
+{% block page_head %}
+{% endblock %}
+
+{% block page_title %}
+<span>Resultado de análise do projeto</span>
+{% endblock %}
+
+{% block page_content %}
+<div>
+  <article>
+    <div class="page-group-title mb-3">
+      <div class="d-flex justify-content-start">
+        <span>Resultado de análise: <span class="fw-medium">{{ project.name }}</span></span>
+      </div>
+    </div>
+    <div class="bg-white rounded-3 shadow-sm py-2">
+        <div class="p-3">
+            <div>
+                <div class="d-flex justify-content-between align-items-start">
+                    <span class="fw-semibold fs-5">Relatório do {{ project.name }}</span>
+                    <span class="status-tag text-nowrap rounded-pill {{validation.status}}">{{ validation.status }}</span>
+                </div>
+                <div class="subtext text-nowrap">Atualizado em: {{ validation.updated_at|date:"d/m/Y H:i:s" }}</div>
+            </div>
+            <div class="divider py-3"></div>
+            <div>
+                <div class="d-flex flex-column gap-4">
+                    {% for validation_rule in validation_rule_list %}
+                        <div>
+                            <div class="d-flex flex-row justify-content-between">
+                                <div>
+                                    {% if validation_rule.fulfilled %}
+                                        <i class="fa-solid fa-circle-check fa-xl me-2" 
+                                            style="color: var(--btn-bg-success-active, #146C43);"></i>
+                                    {% else %}
+                                        <i class="fa-solid fa-circle-xmark fa-xl me-2"
+                                            style="color: var(--btn-bg-danger-active, #B02A37);"></i>
+                                    {% endif %}
+                                    <span>{{ validation_rule.standard_rule.name }}</span>
+                                </div>
+                                <div>
+                                    <a class="btn border-0 p-0 m-0" data-bs-toggle="offcanvas" role="button" 
+                                        href="#id-{{forloop.counter0}}-helper-offcanvas" aria-controls="id-{{forloop.counter0}}-helper-offcanvas">
+                                        <i class="fa-solid fa-circle-info fa-lg" ></i>
+                                    </a>
+                                    {% comment %} Offcanvas Helper {% endcomment %}
+                                    <div class="offcanvas offcanvas-end offcanvas-validation-helper" tabindex="-1"
+                                        id="id-{{forloop.counter0}}-helper-offcanvas" aria-labelledby="offcanvas-{{forloop.counter0}}-helper-label">
+                                        <div class="offcanvas-header">
+                                            <h5 class="offcanvas-title" id="offcanvas-{{forloop.counter0}}-helper-label">
+                                                {{ validation_rule.standard_rule.name }}
+                                            </h5>
+                                            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+                                        </div>
+                                        <div class="offcanvas-body">
+                                            <div>
+                                            <textarea class="form-control" rows="35"
+                                                id="id-{{forloop.counter0}}-helper-offcanvas-textarea" 
+                                                name="name-{{forloop.counter0}}-helper-offcanvas-textarea"
+                                            >{{ validation_rule.standard_rule.description }}</textarea>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            {% if validation_rule.note is not none and validation_rule.note != "" %}
+                                <div class="pt-2">
+                                    <textarea name="name_vr_{{forloop.counter0}}" id="id_vr_{{forloop.counter0}}" readonly
+                                        cols="40" rows="2" class="form-control">{{validation_rule.note}}</textarea>
+                                </div>
+                            {% endif %}
+                        </div>
+                        {% if not forloop.last %}
+                            <hr>
+                        {% endif %}
+                    {% empty %}
+                        <div class="alert alert-warning text-center py-4  w-100">
+                            <p>Não há critérios cadastrados para essa avaliação de projeto.</p>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+            {% comment %} Buttons {% endcomment %}
+            <div class="d-flex justify-content-end pt-4">
+                <a class="btn btn-secondary py-2 px-3" href="{% url 'project-detail' pk=project.id %}">
+                    <i class="fa-solid fa-chevron-left fa-lg me-2"></i>
+                    <span>Voltar</span>
+                </a>
+            </div>
+        </div>
+    </div>
+  </article>
+</div>
+{% endblock %}

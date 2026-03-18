@@ -159,6 +159,12 @@ body main {
     background-color: var(--tag-bg-success, #34D39933);
 }
 
+.report {
+    color: var(--white, #FFFFFF);
+    border: 1px solid var(--blue400, #384e74);
+    background-color: var(--blue400, #384e74);
+}
+
 .divider::after {
     content: "";
     background-color: var(--gray200, #CBD5E1);

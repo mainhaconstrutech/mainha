@@ -9,6 +9,7 @@ urlpatterns = [
     path("projects/", MainhaViews.ProjectListView.as_view(), name="project-list"),
     path("projects/new/", MainhaViews.ProjectCreateView.as_view(), name="project-create"),
     path("projects/<slug:pk>/", MainhaViews.ProjectDetailView.as_view(), name="project-detail"),
+    path("projects/<slug:pk>/report/", MainhaViews.ValidationReportOfProjectDetailView.as_view(), name="project-validation-report"),
     path("projects/<slug:pk>/validations/new/", MainhaViews.ValidationCreateForProjectView.as_view(), name="project-validation-create"),
     path("projects/<slug:pk>/edit/", MainhaViews.ProjectUpdateView.as_view(), name="project-update"),
     path("projects/<slug:pk>/delete/", MainhaViews.ProjectDeleteView.as_view(), name="project-delete"),

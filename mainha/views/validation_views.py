@@ -3,6 +3,7 @@ from django.forms import formset_factory
 from django.shortcuts import render, redirect
 
 from django.views.generic.base import View
+from django.views.generic import TemplateView
 from django.views.generic.list import ListView
 
 from django.views.generic.edit import CreateView, FormView
@@ -11,6 +12,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMix
 
 from mainha import forms as MainhaForms
 from mainha import models as MainhaModels
+
 
 class ValidationListView(LoginRequiredMixin, PermissionRequiredMixin, ListView):
     model = MainhaModels.Validation
@@ -148,3 +150,20 @@ class ValidationAnalysisView(LoginRequiredMixin, PermissionRequiredMixin, FormVi
                 "standard": validation.standard,
                 "formset": formset
             })
+
+
+class ValidationReportOfProjectDetailView(LoginRequiredMixin, TemplateView):
+    template_name = "validation/report_of_project.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        project = MainhaModels.Project.objects.get(id=self.kwargs["pk"])
+        validation = MainhaModels.Validation.objects.filter(project_id=project.id).order_by("id").first()
+        validation_rules = MainhaModels.ValidationRule.objects.filter(validation_id=validation.id) if validation else []
+
+        context["project"] = project
+        context["validation"] = validation
+        context["validation_rule_list"] = validation_rules
+
+        return context

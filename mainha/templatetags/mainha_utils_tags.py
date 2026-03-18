@@ -23,3 +23,10 @@ def get_standard_rule_description(item):
     if item is not None:
         return item.description
     return ""
+
+
+@register.filter(name="show_report_link")
+def show_report_link(status):
+    if status in ['archived', 'failed', 'approved']:
+        return True
+    return False
