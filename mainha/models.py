@@ -66,7 +66,7 @@ class Validation(models.Model):
         if self.standard:
             standard_name = self.standard.name
         return f"{self.id} - {self.project.name} <> {standard_name}"
-    
+
     def set_analysis_result(self):
         self.status = "approved"
         for validation_rule in self.validationrule_set.all():
@@ -89,3 +89,34 @@ class ValidationRule(models.Model):
         if self.standard_rule:
             standard_rule_name = self.standard_rule.name
         return f"{self.id} - {self.validation.name}:{standard_rule_name}"
+
+
+class Account(models.Model):
+    SUBSCRIPTION_CHOICES = {
+        "trial": "trial",
+        "basic": "basic",
+        "intermediate": "intermediate",
+        "advanced": "advanced",
+        "customized": "customized"
+    }
+
+    PAYMENT_STATUS_CHOICES = {
+        "free": "free",
+        "awaiting_payment": "awaiting_payment",
+        "paid": "paid",
+        "not_paid": "not_paid",
+        "expired": "expired"
+    }
+
+    name = models.CharField(max_length=512)
+    cnpj = models.CharField(max_length=512, null=True, default=None)
+    email = models.CharField(max_length=512, null=True, default=None)
+    phone = models.CharField(max_length=512, null=True, default=None)
+    active = models.BooleanField(default=True)
+    subscription = models.CharField(max_length=512, choices=SUBSCRIPTION_CHOICES, default="trial")
+    payment_status = models.CharField(max_length=512, choices=PAYMENT_STATUS_CHOICES, default="free")
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return f"{self.id} - {self.name}"
