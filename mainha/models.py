@@ -120,3 +120,32 @@ class Account(models.Model):
 
     def __str__(self):
         return f"{self.id} - {self.name}"
+
+
+class UserAccount(models.Model):
+    ROLE_CHOICES = {
+        "guest": "guest",
+        "employee": "employee",
+        "manager": "manager",
+        "director": "director"
+    }
+
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    account = models.ForeignKey(Account, on_delete=models.CASCADE)
+    active = models.BooleanField(default=True)
+    role = models.CharField(max_length=512, choices=ROLE_CHOICES, default="director")
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return f"{self.id} - {self.account.name}::{self.user.name}"
+
+
+class UserProject(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    project = models.ForeignKey(Project, on_delete=models.CASCADE)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return f"{self.id} - {self.project.name}::{self.user.name}"
