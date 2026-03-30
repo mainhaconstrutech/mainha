@@ -2,6 +2,56 @@ from django.db import models
 from django.contrib.auth.models import User
 
 
+class Account(models.Model):
+    SUBSCRIPTION_CHOICES = {
+        "trial": "trial",
+        "basic": "basic",
+        "intermediate": "intermediate",
+        "advanced": "advanced",
+        "customized": "customized"
+    }
+
+    PAYMENT_STATUS_CHOICES = {
+        "free": "free",
+        "awaiting_payment": "awaiting_payment",
+        "paid": "paid",
+        "not_paid": "not_paid",
+        "expired": "expired"
+    }
+
+    name = models.CharField(max_length=512)
+    cnpj = models.CharField(max_length=512, null=True, default=None)
+    email = models.CharField(max_length=512, null=True, default=None)
+    phone = models.CharField(max_length=512, null=True, default=None)
+    active = models.BooleanField(default=True)
+    subscription = models.CharField(max_length=512, choices=SUBSCRIPTION_CHOICES, default="trial")
+    payment_status = models.CharField(max_length=512, choices=PAYMENT_STATUS_CHOICES, default="free")
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return f"{self.id} - {self.name}"
+
+
+class UserAccount(models.Model):
+    ROLE_CHOICES = {
+        "guest": "guest",
+        "employee": "employee",
+        "manager": "manager",
+        "director": "director"
+    }
+
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    account = models.ForeignKey(Account, on_delete=models.CASCADE)
+    active = models.BooleanField(default=True)
+    role = models.CharField(max_length=512, choices=ROLE_CHOICES, default="director")
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return f"{self.id} - {self.account.name}::{self.user.name}"
+
+
 class Project(models.Model):
     STATUS_CHOICES = {
         "checking": "Checking",
@@ -15,12 +65,23 @@ class Project(models.Model):
     name = models.CharField(max_length=512)
     description = models.TextField(blank=True, default="")
     status = models.CharField(max_length=64, choices=STATUS_CHOICES, default="checking")
+    account = models.ForeignKey(Account, on_delete=models.CASCADE, null=True, default=None)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, default=None)
 
     def __str__(self):
         return f"{self.id} - {self.name}"
+
+
+class UserProject(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    project = models.ForeignKey(Project, on_delete=models.CASCADE)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return f"{self.id} - {self.project.name}::{self.user.name}"
 
 
 class Standard(models.Model):
@@ -89,63 +150,3 @@ class ValidationRule(models.Model):
         if self.standard_rule:
             standard_rule_name = self.standard_rule.name
         return f"{self.id} - {self.validation.name}:{standard_rule_name}"
-
-
-class Account(models.Model):
-    SUBSCRIPTION_CHOICES = {
-        "trial": "trial",
-        "basic": "basic",
-        "intermediate": "intermediate",
-        "advanced": "advanced",
-        "customized": "customized"
-    }
-
-    PAYMENT_STATUS_CHOICES = {
-        "free": "free",
-        "awaiting_payment": "awaiting_payment",
-        "paid": "paid",
-        "not_paid": "not_paid",
-        "expired": "expired"
-    }
-
-    name = models.CharField(max_length=512)
-    cnpj = models.CharField(max_length=512, null=True, default=None)
-    email = models.CharField(max_length=512, null=True, default=None)
-    phone = models.CharField(max_length=512, null=True, default=None)
-    active = models.BooleanField(default=True)
-    subscription = models.CharField(max_length=512, choices=SUBSCRIPTION_CHOICES, default="trial")
-    payment_status = models.CharField(max_length=512, choices=PAYMENT_STATUS_CHOICES, default="free")
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
-
-    def __str__(self):
-        return f"{self.id} - {self.name}"
-
-
-class UserAccount(models.Model):
-    ROLE_CHOICES = {
-        "guest": "guest",
-        "employee": "employee",
-        "manager": "manager",
-        "director": "director"
-    }
-
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
-    account = models.ForeignKey(Account, on_delete=models.CASCADE)
-    active = models.BooleanField(default=True)
-    role = models.CharField(max_length=512, choices=ROLE_CHOICES, default="director")
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
-
-    def __str__(self):
-        return f"{self.id} - {self.account.name}::{self.user.name}"
-
-
-class UserProject(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
-    project = models.ForeignKey(Project, on_delete=models.CASCADE)
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
-
-    def __str__(self):
-        return f"{self.id} - {self.project.name}::{self.user.name}"
