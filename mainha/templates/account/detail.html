@@ -27,17 +27,25 @@
                 <span>Analisar Projeto</span>
               </a>
             </li> {% endcomment %}
-            {% comment %} <li class="warning">
-              <a class="dropdown-item" href="{% url 'project-update' object.pk %}">
+            
+            {% if user.is_staff %}
+            <li class="warning">
+              <a class="dropdown-item" href="{% url 'account-update' object.pk %}">
                 <i class="fa-solid fa-pen-to-square fa-lg me-2"></i>
                 <span>Atualizar Conta</span>
               </a>
-            </li> {% endcomment %}
-            {% if user.is_staff %}
-            <li class="danger">
+            </li>
+            {% comment %} <li class="danger">
               <a class="dropdown-item" href="{% url 'account-delete' object.pk %}">
                 <i class="fa-solid fa-trash-can fa-lg me-2"></i>
                 <span>Deletar Conta</span>
+              </a>
+            </li> {% endcomment %}
+            {% else %}
+            <li class="warning">
+              <a class="dropdown-item" href="{% url 'account-update' object.pk %}">
+                <i class="fa-solid fa-pen-to-square fa-lg me-2"></i>
+                <span>Atualizar Conta</span>
               </a>
             </li>
             {% endif %}
@@ -87,7 +95,7 @@
                 <div class="input-group pb-2">
                     <span class="input-group-text text-secondary">CNPJ</span>
                     {% comment %} <label for="id_cnpj" class="form-label text-secondary">CNPJ</label> {% endcomment %}
-                    <input type="text" class="form-control" id="id_cnpj" name="cnpj" aria-label="CNPJ" value="{{ object.cnpj }}" readonly>
+                    <input type="text" class="form-control" id="id_cnpj" name="cnpj" aria-label="CNPJ" value="{{ object.cnpj|default_if_none:"" }}" readonly>
                 </div>
                 
                 <div class="input-group pb-2">

@@ -9,6 +9,7 @@ urlpatterns = [
     path("accounts/", MainhaViews.AccountListView.as_view(), name="account-list"),
     path("accounts/new/", MainhaViews.AccountCreateView.as_view(), name="account-create"),
     path("accounts/<slug:pk>/", MainhaViews.AccountDetailView.as_view(), name="account-detail"),
+    path("accounts/<slug:pk>/edit/", MainhaViews.AccountUpdateRegularUserView.as_view(), name="account-update"),
     path("accounts/<slug:pk>/delete/", MainhaViews.AccountDeleteView.as_view(), name="account-delete"),
     path("projects/", MainhaViews.ProjectListView.as_view(), name="project-list"),
     path("projects/new/", MainhaViews.ProjectCreateView.as_view(), name="project-create"),

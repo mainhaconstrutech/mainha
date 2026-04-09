@@ -32,16 +32,13 @@ class AccountDetailView(LoginRequiredMixin, DetailView):
     template_name = "account/detail.html"
 
 
-# class AccountUpdateView(LoginRequiredMixin, UpdateView):
-#     model = MainhaModels.Account
-#     form_class = MainhaForms.AccountForm
-#     template_name = "project/update.html"
+class AccountUpdateRegularUserView(LoginRequiredMixin, UpdateView):
+    model = MainhaModels.Account
+    form_class = MainhaForms.AccountRegularUserForm
+    template_name = "account/update.html"
 
-#     def get_queryset(self):
-#         return MainhaModels.Project.objects.filter(user=self.request.user)
-
-#     def get_success_url(self):
-#         return reverse('project-detail', kwargs=self.kwargs)
+    def get_success_url(self):
+        return reverse('account-detail', kwargs=self.kwargs)
 
 
 class AccountDeleteView(LoginRequiredMixin, PermissionRequiredMixin, DeleteView):
