@@ -3,6 +3,40 @@ from django.core.exceptions import ValidationError
 
 from mainha import models as MainhaModels
 
+class AccountAdminCreateForm(forms.ModelForm):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields["name"].widget.attrs.update({
+            "class": "form-control",
+            "placeholder": "Nome da organização"
+        })
+        self.fields["cnpj"].widget.attrs.update({
+            "class": "form-control",
+            "placeholder": "CNPJ da organização"
+        })
+        self.fields["email"].widget.attrs.update({
+            "class": "form-control",
+            "placeholder": "E-mail da organização"
+        })
+        self.fields["phone"].widget.attrs.update({
+            "class": "form-control",
+            "placeholder": "Telefone da organização"
+        })
+        self.fields["subscription"].widget.attrs.update({
+            "class": "form-select",
+            "placeholder": "Assinatura"
+        })
+
+    class Meta:
+        model = MainhaModels.Account
+        fields = ["name", "cnpj", "email", "phone", "subscription"]
+        labels = {
+            "name": "Nome",
+            "cnpj": "CNPJ",
+            "email": "E-mail",
+            "phone": "Telefone",
+            "subscription": "Assinatura",
+        }
 
 class ProjectForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):

@@ -1,0 +1,58 @@
+{% extends '../base.html' %}
+{% load static %}
+
+{% block page_head %}
+{% endblock %}
+
+{% block page_title %}
+<span>Contas</span>
+{% endblock %}
+
+{% block page_content %}
+<div>
+  <article>
+    <div class="page-group-title mb-3">
+      <div class="d-flex justify-content-between">
+        <span>Contas</span>
+        {% if user.is_staff %}
+        <div>
+          <a class="btn btn-success rounded-3" href="{% url 'account-create' %}">
+            <i class="fa-solid fa-file-circle-plus fa-lg me-2"></i>
+            <span>Nova Conta</span>
+          </a>
+        </div>
+        {% endif %}
+      </div>
+    </div>
+    <div class="bg-white rounded-3 shadow-sm py-2">
+      {% for account in account_list %}
+      <a href="#">
+        <div class="d-flex flex-row justify-content-between align-items-center list-item-container">
+          <div class="flex-grow-1 d-flex flex-column">
+            <h6 class="fw-semibold pb-2">{{ account.name }}</h6>
+            <p class="subtext">Criado em {{ account.created_at|date:"d/m/Y" }}</p>
+            <p class="subtext">Atualizado em {{ account.updated_at|date:"d/m/Y H:i:s" }}</p>
+          </div>
+          <div>
+            {% if account.active %}
+            <span class="status-tag text-nowrap rounded-pill approved">Ativo</span>
+            {% else %}
+            <span class="status-tag text-nowrap rounded-pill failed">Desativado</span>
+            {% endif %}
+            <span class="ms-3">
+              <i class="fa-solid fa-chevron-right fa-xl"></i>
+            </span>
+          </div>
+        </div>
+      </a>
+      {% empty %}
+      <div class="d-flex flex-row justify-content-center align-items-center list-item-container">
+        <div class="alert alert-dark text-center py-4  w-100">
+          <p>Não há nenhum conta cadastrada.</p>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </article>
+</div>
+{% endblock %}
