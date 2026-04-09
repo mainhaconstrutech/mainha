@@ -27,12 +27,10 @@ class AccountCreateView(LoginRequiredMixin, PermissionRequiredMixin, CreateView)
     success_url = reverse_lazy("account-list")
 
 
-# class AccountDetailView(LoginRequiredMixin, DetailView):
-#     model = MainhaModels.Account
-#     template_name = "project/detail.html"
+class AccountDetailView(LoginRequiredMixin, DetailView):
+    model = MainhaModels.Account
+    template_name = "account/detail.html"
 
-#     def get_queryset(self):
-#         return MainhaModels.Account.objects.filter(user=self.request.user)
 
 # class AccountUpdateView(LoginRequiredMixin, UpdateView):
 #     model = MainhaModels.Account

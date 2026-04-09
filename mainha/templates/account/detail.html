@@ -1,0 +1,131 @@
+{% extends '../base.html' %}
+{% load static %}
+{% load mainha_utils_tags %}
+
+{% block page_head %}
+{% endblock %}
+
+{% block page_title %}
+<span>Detalhes da conta</span>
+{% endblock %}
+
+{% block page_content %}
+<div>
+  <article>
+    <div class="page-group-title mb-3">
+      <div class="d-flex justify-content-between gap-2">
+        <div>Conta: <span class="fw-medium">{{ object.name }}</span></div>
+        <div class="dropdown">
+          <button class="btn btn-primary dropdown-toggle" type="button" data-bs-toggle="dropdown"
+            aria-expanded="false">
+            <span>Ações</span>
+          </button>
+          <ul class="dropdown-menu">
+            {% comment %} <li class="primary">
+              <a class="dropdown-item" href="{% url 'project-validation-create' object.pk %}">
+                <i class="fa-solid fa-file-waveform fa-lg me-2"></i>
+                <span>Analisar Projeto</span>
+              </a>
+            </li> {% endcomment %}
+            {% comment %} <li class="warning">
+              <a class="dropdown-item" href="{% url 'project-update' object.pk %}">
+                <i class="fa-solid fa-pen-to-square fa-lg me-2"></i>
+                <span>Atualizar Conta</span>
+              </a>
+            </li> {% endcomment %}
+            {% if user.is_staff %}
+            <li class="danger">
+              <a class="dropdown-item" href="{% url 'account-delete' object.pk %}">
+                <i class="fa-solid fa-trash-can fa-lg me-2"></i>
+                <span>Deletar Conta</span>
+              </a>
+            </li>
+            {% endif %}
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="bg-white rounded-3 shadow-sm py-2">
+      <div class="p-3">
+        <div>
+          <div class="d-flex justify-content-between align-items-start">
+            <div>
+              <span class="fw-semibold fs-5">{{ object.name }}</span>
+            </div>
+            {% if account.active %}
+            <span class="status-tag text-nowrap rounded-pill approved">Conta Ativa</span>
+            {% else %}
+            <span class="status-tag text-nowrap rounded-pill failed">Conta Desativada</span>
+            {% endif %}
+          </div>
+          <div class="d-flex flex-column align-items-start">
+            <div class="subtext text-nowrap">Criado em: {{ object.created_at|date:"d/m/Y" }}</div>
+            <div class="subtext text-nowrap">Atualizado em: {{ object.updated_at|date:"d/m/Y H:i:s" }}</div>
+            {% comment %} {% if object.status|show_report_link %}
+              <a class="ps-2" href={% url 'project-validation-report' object.pk %}>
+                <span class="status-tag text-nowrap rounded-pill report fw-semibold">Acessar relatório</span>
+              </a>
+            {% endif %} {% endcomment %}
+          </div>
+        </div>
+        <div class="divider py-3"></div>
+        <div class="accordion mainha-accordion" id="accordionPanelsDetails">
+          <div class="accordion-item">
+            <h2 class="accordion-header">
+              <button class="accordion-button" type="button" data-bs-toggle="collapse"
+                data-bs-target="#panels-collapseDetail" aria-expanded="true" aria-controls="panels-collapseDetail">
+                Detalhes da conta
+              </button>
+            </h2>
+            <div id="panels-collapseDetail" class="accordion-collapse collapse show">
+              <div class="accordion-body">
+                <div class="input-group pb-2">
+                    <span class="input-group-text text-secondary">Nome</span>
+                    <input type="text" class="form-control" id="id_name" name="name" aria-label="Name" value="{{ object.name }}" readonly>
+                </div>
+                
+                <div class="input-group pb-2">
+                    <span class="input-group-text text-secondary">CNPJ</span>
+                    {% comment %} <label for="id_cnpj" class="form-label text-secondary">CNPJ</label> {% endcomment %}
+                    <input type="text" class="form-control" id="id_cnpj" name="cnpj" aria-label="CNPJ" value="{{ object.cnpj }}" readonly>
+                </div>
+                
+                <div class="input-group pb-2">
+                    <span class="input-group-text text-secondary">E-mail</span>
+                    <input type="text" class="form-control" id="id_email" name="email" aria-label="E-mail" value="{{ object.email }}" readonly>
+                </div>
+                
+                <div class="input-group pb-2">
+                    <span class="input-group-text text-secondary">E-Telefone</span>
+                    <input type="text" class="form-control" id="id_phone" name="phone" aria-label="Phone" value="{{ object.phone }}" readonly>
+                </div>
+                
+                <div class="input-group pb-2">
+                    <span class="input-group-text text-secondary">Assinatura</span>
+                    <input class="form-control" id="id_subscription" name="subscription" aria-label="id_subscription" value="{{ object.subscription }}" readonly>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="accordion mainha-accordion mt-2" id="accordionPanelsUsers">
+          <div class="accordion-item">
+            <h2 class="accordion-header">
+              <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                data-bs-target="#panels-collapseUsers" aria-expanded="false" aria-controls="panels-collapseUsers">
+                Usuários
+              </button>
+            </h2>
+            <div id="panels-collapseUsers" class="accordion-collapse collapse">
+              <div class="accordion-body">
+                Lista de usuários
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </article>
+</div>
+{% endblock %}
