@@ -20,7 +20,7 @@ class Account(models.Model):
     }
 
     name = models.CharField(max_length=512)
-    cnpj = models.CharField(max_length=512, null=True, default=None)
+    cnpj = models.CharField(max_length=512, blank=True, null=True, default=None)
     email = models.CharField(max_length=512, null=True, default=None)
     phone = models.CharField(max_length=512, null=True, default=None)
     active = models.BooleanField(default=True)
