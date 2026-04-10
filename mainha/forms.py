@@ -4,7 +4,7 @@ from django.core.exceptions import ValidationError
 from mainha import models as MainhaModels
 
 
-class AccountAdminCreateForm(forms.ModelForm):
+class AccountAdminUserForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.fields["name"].widget.attrs.update({

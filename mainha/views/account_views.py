@@ -19,9 +19,9 @@ class AccountListView(LoginRequiredMixin, PermissionRequiredMixin, ListView):
         return MainhaModels.Account.objects.all().order_by("name")
 
 
-class AccountCreateView(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
+class AccountCreateAdminUserView(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
     model = MainhaModels.Account
-    form_class = MainhaForms.AccountAdminCreateForm
+    form_class = MainhaForms.AccountAdminUserForm
     permission_required = 'is_staff'
     template_name = "account/create.html"
     success_url = reverse_lazy("account-list")
@@ -30,6 +30,16 @@ class AccountCreateView(LoginRequiredMixin, PermissionRequiredMixin, CreateView)
 class AccountDetailView(LoginRequiredMixin, DetailView):
     model = MainhaModels.Account
     template_name = "account/detail.html"
+
+
+class AccountUpdateAdminUserView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
+    model = MainhaModels.Account
+    form_class = MainhaForms.AccountAdminUserForm
+    permission_required = 'is_staff'
+    template_name = "account/update.html"
+
+    def get_success_url(self):
+        return reverse('account-detail', kwargs=self.kwargs)
 
 
 class AccountUpdateRegularUserView(LoginRequiredMixin, UpdateView):

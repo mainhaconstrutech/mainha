@@ -30,7 +30,7 @@
             
             {% if user.is_staff %}
             <li class="warning">
-              <a class="dropdown-item" href="{% url 'account-update' object.pk %}">
+              <a class="dropdown-item" href="{% url 'account-update-admin' object.pk %}">
                 <i class="fa-solid fa-pen-to-square fa-lg me-2"></i>
                 <span>Atualizar Conta</span>
               </a>
