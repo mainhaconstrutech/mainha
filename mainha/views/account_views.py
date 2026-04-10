@@ -1,8 +1,10 @@
 from django.urls import reverse_lazy, reverse
+from django.shortcuts import redirect
 
-from django.views.generic.list import ListView
+from django.views.generic import TemplateView
 from django.views.generic.detail import DetailView
 from django.views.generic.edit import DeleteView, CreateView, UpdateView
+from django.views.generic.list import ListView
 
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 
@@ -49,6 +51,17 @@ class AccountUpdateRegularUserView(LoginRequiredMixin, UpdateView):
 
     def get_success_url(self):
         return reverse('account-detail', kwargs=self.kwargs)
+
+
+class AccountUpdateActiveStatusView(LoginRequiredMixin, PermissionRequiredMixin, TemplateView):
+    permission_required = 'is_staff'
+    template_name = "account/detail.html"
+
+    def dispatch(self, request, *args, **kwargs):
+        account = MainhaModels.Account.objects.get(id=self.kwargs["pk"])
+        account.active = not(account.active)
+        account.save()
+        return redirect('account-detail', pk=account.id)
 
 
 class AccountDeleteView(LoginRequiredMixin, PermissionRequiredMixin, DeleteView):

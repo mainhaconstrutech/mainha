@@ -11,6 +11,7 @@ urlpatterns = [
     path("accounts/<slug:pk>/", MainhaViews.AccountDetailView.as_view(), name="account-detail"),
     path("accounts/<slug:pk>/edit/", MainhaViews.AccountUpdateRegularUserView.as_view(), name="account-update"),
     path("accounts/<slug:pk>/delete/", MainhaViews.AccountDeleteView.as_view(), name="account-delete"),
+    path("accounts/<slug:pk>/enable-disable/", MainhaViews.AccountUpdateActiveStatusView.as_view(), name="account-enable-disable"),
     path("accounts/<slug:pk>/admin/edit/", MainhaViews.AccountUpdateAdminUserView.as_view(), name="account-update-admin"),
     path("projects/", MainhaViews.ProjectListView.as_view(), name="project-list"),
     path("projects/new/", MainhaViews.ProjectCreateView.as_view(), name="project-create"),

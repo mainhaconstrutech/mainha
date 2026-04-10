@@ -21,14 +21,14 @@
             <span>Ações</span>
           </button>
           <ul class="dropdown-menu">
-            {% comment %} <li class="primary">
-              <a class="dropdown-item" href="{% url 'project-validation-create' object.pk %}">
-                <i class="fa-solid fa-file-waveform fa-lg me-2"></i>
-                <span>Analisar Projeto</span>
-              </a>
-            </li> {% endcomment %}
             
             {% if user.is_staff %}
+            <li class="primary">
+              <a class="dropdown-item" href="{% url 'account-enable-disable' object.pk %}">
+                <i class="fa-solid fa-file-waveform fa-lg me-2"></i>
+                <span>Ativar/Desativar Conta</span>
+              </a>
+            </li>
             <li class="warning">
               <a class="dropdown-item" href="{% url 'account-update-admin' object.pk %}">
                 <i class="fa-solid fa-pen-to-square fa-lg me-2"></i>
