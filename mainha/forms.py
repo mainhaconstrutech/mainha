@@ -1,7 +1,61 @@
 from django import forms
 from django.core.exceptions import ValidationError
 
+from django.contrib.auth import models as AuthModels
 from mainha import models as MainhaModels
+
+
+class CreateAccountAdminUserForm(forms.Form):
+    account_name = forms.CharField(
+        max_length=512,
+        label="Nome da organização",
+        widget=forms.TextInput(attrs={"class": "form-control"})
+    )
+    account_cnpj = forms.CharField(
+        max_length=512,
+        required=False,
+        label="CNPJ da organização",
+        widget=forms.TextInput(attrs={"class": "form-control", "placeholder": "00.000.000/0000-00"})
+    )
+    account_email = forms.EmailField(
+        max_length=512,
+        label="E-mail da organização",
+        widget=forms.EmailInput(attrs={"class": "form-control", "placeholder": "business@email.com"})
+    )
+    account_phone = forms.CharField(
+        max_length=512,
+        label="Telefone da organização",
+        widget=forms.NumberInput(attrs={"class": "form-control", "placeholder": "(00) 0 0000-0000"})
+    )
+    account_subscription = forms.ChoiceField(
+        label="Assinatura da conta",
+        choices=MainhaModels.Account.SUBSCRIPTION_CHOICES,
+        initial="trial",
+        widget=forms.Select(attrs={"class": "form-select"})
+    )
+    user_username = forms.CharField(
+        max_length=150,
+        label="Nome de usuário do administrador",
+        widget=forms.TextInput(attrs={"class": "form-control"})
+    )
+    user_email = forms.EmailField(
+        max_length=254,
+        label="E-mail do administrador",
+        widget=forms.EmailInput(attrs={"class": "form-control", "placeholder": "personal@email.com"})
+    )
+    user_password = forms.CharField(
+        label="Senha do administradors",
+        widget=forms.PasswordInput(attrs={"class": "form-control"})
+    )
+
+
+class UserRegistrationForm(forms.ModelForm):
+    class Meta:
+        model = AuthModels.User
+        fields = ['username', 'email', 'password']
+        widgets = {
+            'password': forms.PasswordInput(),
+        }
 
 
 class AccountAdminUserForm(forms.ModelForm):
