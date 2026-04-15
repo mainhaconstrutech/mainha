@@ -267,6 +267,15 @@ body main {
     --bs-dropdown-link-active-color: var(--white, #FFFFFF);
 }
 
+.custom-icon.warning:hover {
+    background-color: var(--btn-bg-warning-hover, #FFCA2C);
+}
+
+.custom-icon.danger:hover {
+    color: var(--white, #FFFFFF);
+    background-color: var(--btn-bg-danger-hover, #BB2D3B);
+}
+
 .offcanvas-validation-helper {
     --bs-offcanvas-bg: var(--gray100);
     --bs-offcanvas-color: var(--blue800, #1A202C);

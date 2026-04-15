@@ -127,6 +127,14 @@
             </h2>
             <div id="panels-collapseUsers" class="accordion-collapse collapse">
               <div class="accordion-body">
+                <div class="d-flex justify-content-end pb-3">
+                  <div>
+                    <a class="btn btn-success rounded-3" href="{% url 'account-user-new' object.pk %}">
+                      <i class="fa-solid fa-file-circle-plus fa-lg me-2"></i>
+                      <span>Adicionar novo usuário</span>
+                    </a>
+                  </div>
+                </div>
                 {% if account_users %}
                   <table class="table table-striped">
                     <thead>
@@ -140,28 +148,21 @@
                     <tbody class="table-group-divider">
                       {% for account_user in account_users %}
                         <tr>
-                          <td>{{ account_user.user.username }}</th>
-                          <td>
+                          <td class="align-middle">{{ account_user.user.username }}</th>
+                          <td class="align-middle">
                             {% if account_user.user.firstname or account_user.user.lastname %}
                               {{ account_user.user.firstname }} {{ account_user.user.lastname }}
                             {% else %}
                               -
                             {% endif %}
                           </td>
-                          <td>{{ account_user.role }}</td>
+                          <td class="align-middle">{{ account_user.role }}</td>
                           <td>
-                            <div class="d-flex flex-row gap-3">
-                              <a href="#">
-                                {% if account_user.active %}
-                                  <i class="fa-solid fa-toggle-off fa-lg"></i>
-                                {% else %}
-                                  <i class="fa-solid fa-toggle-on fa-lg"></i>
-                                {% endif %}
-                              </a>
-                              <a href="#">
+                            <div class="d-flex flex-row align-items-center gap-3">
+                              <a class="p-1 rounded-3 custom-icon warning" href="{% url 'account-user-update' account_id=object.id pk=account_user.id %}">
                                   <i class="fa-solid fa-pen-to-square fa-lg"></i>
                               </a>
-                              <a href="#">
+                              <a class="p-1 rounded-3 custom-icon danger" href="#">
                                   <i class="fa-solid fa-trash-can fa-lg"></i>
                               </a>
                             </div>

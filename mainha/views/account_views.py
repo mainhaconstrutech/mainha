@@ -33,7 +33,7 @@ class AccountCreateAdminUserView(LoginRequiredMixin, PermissionRequiredMixin, Fo
         if form.is_valid():
             user_form = MainhaForms.UserRegistrationForm({
                 "email": form.cleaned_data.get("user_email"),
-                "username": form.cleaned_data.get("user_username"),
+                "username": form.cleaned_data.get("user_email"),
                 "password": form.cleaned_data.get("user_password"),
             })
 

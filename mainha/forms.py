@@ -5,6 +5,15 @@ from django.contrib.auth import models as AuthModels
 from mainha import models as MainhaModels
 
 
+class UserRegistrationForm(forms.ModelForm):
+    class Meta:
+        model = AuthModels.User
+        fields = ['username', 'email', 'password']
+        widgets = {
+            'password': forms.PasswordInput(),
+        }
+
+
 class CreateAccountAdminUserForm(forms.Form):
     account_name = forms.CharField(
         max_length=512,
@@ -33,11 +42,6 @@ class CreateAccountAdminUserForm(forms.Form):
         initial="trial",
         widget=forms.Select(attrs={"class": "form-select"})
     )
-    user_username = forms.CharField(
-        max_length=150,
-        label="Nome de usuário do administrador",
-        widget=forms.TextInput(attrs={"class": "form-control"})
-    )
     user_email = forms.EmailField(
         max_length=254,
         label="E-mail do administrador",
@@ -47,15 +51,6 @@ class CreateAccountAdminUserForm(forms.Form):
         label="Senha do administradors",
         widget=forms.PasswordInput(attrs={"class": "form-control"})
     )
-
-
-class UserRegistrationForm(forms.ModelForm):
-    class Meta:
-        model = AuthModels.User
-        fields = ['username', 'email', 'password']
-        widgets = {
-            'password': forms.PasswordInput(),
-        }
 
 
 class AccountAdminUserForm(forms.ModelForm):
@@ -122,6 +117,44 @@ class AccountRegularUserForm(forms.ModelForm):
             "cnpj": "CNPJ",
             "email": "E-mail",
             "phone": "Telefone"
+        }
+
+
+class CreateUserAccountForm(forms.Form):
+    email = forms.EmailField(
+        max_length=254,
+        label="E-mail",
+        widget=forms.EmailInput(attrs={"class": "form-control", "placeholder": "personal@email.com"})
+    )
+    role = forms.ChoiceField(
+        label="Função",
+        choices=MainhaModels.UserAccount.ROLE_CHOICES,
+        initial="employee",
+        widget=forms.Select(attrs={"class": "form-select"})
+    )
+    password = forms.CharField(
+        label="Senha",
+        widget=forms.PasswordInput(attrs={"class": "form-control"})
+    )
+
+
+class UpdateUserAccountForm(forms.ModelForm):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields["active"].widget.attrs.update({
+            "class": "form-check-input",
+            "role": "switch",
+        })
+        self.fields["role"].widget.attrs.update({
+            "class": "form-select"
+        })
+
+    class Meta:
+        model = MainhaModels.UserAccount
+        fields = ["active", "role"]
+        labels = {
+            "active": "Ativo",
+            "role": "Função",
         }
 
 
