@@ -61,6 +61,12 @@ class AccountDetailView(LoginRequiredMixin, DetailView):
     model = MainhaModels.Account
     template_name = "account/detail.html"
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["account_users"] = MainhaModels.UserAccount.objects.filter(
+            account_id=self.kwargs.get("pk")).order_by("user__username")
+        return context
+
 
 class AccountUpdateAdminUserView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
     model = MainhaModels.Account

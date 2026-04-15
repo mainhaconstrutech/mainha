@@ -127,7 +127,54 @@
             </h2>
             <div id="panels-collapseUsers" class="accordion-collapse collapse">
               <div class="accordion-body">
-                Lista de usuários
+                {% if account_users %}
+                  <table class="table table-striped">
+                    <thead>
+                      <tr>
+                        <th scope="col">Nome de usuário</th>
+                        <th scope="col">Nome</th>
+                        <th scope="col">Função</th>
+                        <th scope="col">Ações</th>
+                      </tr>
+                    </thead>
+                    <tbody class="table-group-divider">
+                      {% for account_user in account_users %}
+                        <tr>
+                          <td>{{ account_user.user.username }}</th>
+                          <td>
+                            {% if account_user.user.firstname or account_user.user.lastname %}
+                              {{ account_user.user.firstname }} {{ account_user.user.lastname }}
+                            {% else %}
+                              -
+                            {% endif %}
+                          </td>
+                          <td>{{ account_user.role }}</td>
+                          <td>
+                            <div class="d-flex flex-row gap-3">
+                              <a href="#">
+                                {% if account_user.active %}
+                                  <i class="fa-solid fa-toggle-off fa-lg"></i>
+                                {% else %}
+                                  <i class="fa-solid fa-toggle-on fa-lg"></i>
+                                {% endif %}
+                              </a>
+                              <a href="#">
+                                  <i class="fa-solid fa-pen-to-square fa-lg"></i>
+                              </a>
+                              <a href="#">
+                                  <i class="fa-solid fa-trash-can fa-lg"></i>
+                              </a>
+                            </div>
+                          </td>
+                        </tr>
+                      {% endfor %}
+                    </tbody>
+                  </table>
+                {% else %}
+                  <div class="alert alert-dark text-center py-4  w-100">
+                    <p>Não há nenhum usuário cadastrado nessa conta.</p>
+                  </div>
+                {% endif %}
               </div>
             </div>
           </div>
