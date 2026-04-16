@@ -76,3 +76,31 @@ class UserAccountUpdateView(LoginRequiredMixin, PermissionRequiredMixin, UpdateV
 
     def get_success_url(self):
         return reverse('account-detail', kwargs={'pk': self.kwargs['account_id']})
+    
+
+class UserAccountDeleteView(LoginRequiredMixin, PermissionRequiredMixin, DeleteView):
+    model = MainhaModels.UserAccount
+    template_name = "user_account/delete.html"
+
+    def has_permission(self):
+        user_account = MainhaModels.UserAccount.objects.filter(
+            user=self.request.user,
+            account_id=self.kwargs.get("account_id")
+        ).first()
+
+        if self.request.user.is_staff:
+            return True
+        elif user_account is not None and user_account.role == "director":
+            return True
+        else:
+            return False
+        
+    def form_valid(self, form):
+        user = self.object.user
+        result = super().form_valid(form)
+
+        user.delete()
+        return result
+
+    def get_success_url(self):
+        return reverse('account-detail', kwargs={'pk': self.kwargs['account_id']})
