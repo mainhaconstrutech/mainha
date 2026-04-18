@@ -25,7 +25,7 @@ class ProjectCreateView(LoginRequiredMixin, CreateView):
 
     def post(self, request, *args, **kwargs):
         response = super().post(request, *args, **kwargs)
-        self.object.user = request.user
+        self.object.created_by = request.user
         self.object.save()
         return response
 

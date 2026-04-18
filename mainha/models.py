@@ -42,7 +42,7 @@ class UserAccount(models.Model):
     }
 
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    account = models.ForeignKey(Account, on_delete=models.CASCADE)
+    account = models.ForeignKey(Account, on_delete=models.SET_NULL, null=True)
     active = models.BooleanField(default=True)
     role = models.CharField(max_length=512, choices=ROLE_CHOICES, default="director")
     created_at = models.DateTimeField(auto_now_add=True)
@@ -68,7 +68,7 @@ class Project(models.Model):
     account = models.ForeignKey(Account, on_delete=models.CASCADE, null=True, default=None)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, default=None)
+    created_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, default=None)
 
     def __str__(self):
         return f"{self.id} - {self.name}"
