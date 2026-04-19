@@ -179,6 +179,43 @@ class ProjectForm(forms.ModelForm):
         }
 
 
+class UserProjectForm(forms.ModelForm):
+    project = forms.ModelChoiceField(
+        queryset=MainhaModels.Project.objects.all(),
+        widget=forms.HiddenInput()
+    )
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        projects = MainhaModels.Project.objects.filter(id=kwargs.get("initial").get("project"))
+        project = projects.first()
+
+        self.fields["project"].widget.attrs.update({"class": "form-select"})
+        self.fields['project'].queryset = projects
+        self.fields['project'].empty_label = None
+
+        project_user_ids = MainhaModels.UserProject.objects.filter(
+                project=project
+            ).values_list("user__id", flat=True)
+        account_user_ids_availables = MainhaModels.UserAccount.objects.filter(
+                account=project.account, role__in=["guest", "employee"]
+            ).exclude(
+                user__id__in=project_user_ids
+            ).values_list("user__id", flat=True)
+        
+        
+        self.fields["user"].widget.attrs.update({"class": "form-select"})
+        self.fields['user'].queryset = AuthModels.User.objects.filter(id__in=account_user_ids_availables)
+
+    class Meta:
+        model = MainhaModels.UserProject
+        fields = ["project", "user"]
+        labels = {
+            "project": "Projeto",
+            "user": "Usuário",
+        }
+
+
 class StandardForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -285,9 +322,9 @@ class ValidationForm(forms.ModelForm):
         project_id = kwargs.get('initial').get('project')
 
         if project_id is None:
-            projects = MainhaModels.Project.objects.filter(user=user).all()
+            projects = MainhaModels.Project.objects.filter(created_by=user).all()
         else:
-            projects = MainhaModels.Project.objects.filter(pk=project_id, user=user).all()
+            projects = MainhaModels.Project.objects.filter(pk=project_id, created_by=user).all()
 
         self.fields["project"].queryset = projects
         self.fields["project"].widget.attrs.update({

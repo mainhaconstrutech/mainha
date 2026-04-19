@@ -10,7 +10,7 @@ class DashboardView(LoginRequiredMixin, TemplateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         all_projects = MainhaModels.Project.objects.filter(
-            user=self.request.user).order_by("-updated_at")
+            created_by=self.request.user).order_by("-updated_at")
         projects_all_total = all_projects.count()
         projects_success_total = all_projects.filter(status="success").count()
         projects_success_rate = projects_success_total / \
