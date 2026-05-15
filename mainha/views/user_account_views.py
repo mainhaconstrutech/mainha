@@ -4,6 +4,7 @@ from django.urls import reverse_lazy, reverse
 from django.views.generic.edit import DeleteView, UpdateView, FormView
 
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
+from django.contrib.auth.forms import UserCreationForm
 
 from mainha import forms as MainhaForms
 from mainha import models as MainhaModels
@@ -29,10 +30,11 @@ class UserAccountCreateView(LoginRequiredMixin, PermissionRequiredMixin, FormVie
         form = MainhaForms.CreateUserAccountForm(request.POST)
 
         if form.is_valid():
-            user_form = MainhaForms.UserRegistrationForm({
+            user_form = UserCreationForm({
                 "email": form.cleaned_data.get("email"),
                 "username": form.cleaned_data.get("email"),
-                "password": form.cleaned_data.get("password"),
+                "password1": form.cleaned_data.get("password"),
+                "password2": form.cleaned_data.get("password")
             })
 
             if user_form.is_valid():

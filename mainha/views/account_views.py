@@ -7,6 +7,7 @@ from django.views.generic.edit import DeleteView, UpdateView, FormView
 from django.views.generic.list import ListView
 
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
+from django.contrib.auth.forms import UserCreationForm
 
 from mainha import forms as MainhaForms
 from mainha import models as MainhaModels
@@ -31,10 +32,11 @@ class AccountCreateAdminUserView(LoginRequiredMixin, PermissionRequiredMixin, Fo
         form = MainhaForms.CreateAccountAdminUserForm(request.POST)
 
         if form.is_valid():
-            user_form = MainhaForms.UserRegistrationForm({
+            user_form = UserCreationForm({
                 "email": form.cleaned_data.get("user_email"),
                 "username": form.cleaned_data.get("user_email"),
-                "password": form.cleaned_data.get("user_password"),
+                "password1": form.cleaned_data.get("user_password"),
+                "password2": form.cleaned_data.get("user_password")
             })
 
             account_form = MainhaForms.AccountAdminUserForm({
