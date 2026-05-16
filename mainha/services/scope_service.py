@@ -5,6 +5,22 @@ from mainha import models as MainhaModels
 
 class ScopeService:
     @staticmethod
+    def list_accounts(user: User):
+        """
+        Load account list which current user has access.
+
+        Args:
+            user (User): Current user.
+        Returns:
+            List: List of accounts which user has access allowed.
+        """
+        if user.is_superuser or user.is_staff:
+            return MainhaModels.Account.objects.all()
+        else:
+            user_account = MainhaModels.UserAccount.objects.filter(user=user).first()
+            return MainhaModels.Account.objects.filter(id=user_account.account.id).all()
+
+    @staticmethod
     def list_projects(user: User):
         """
         Load project list which current user has access.
@@ -12,7 +28,7 @@ class ScopeService:
         Args:
             user (User): Current user.
         Returns:
-            List: List of projects which user has access permitted.
+            List: List of projects which user has access allowed.
         """
         if user.is_superuser or user.is_staff:
             return MainhaModels.Project.objects.all()
@@ -40,13 +56,11 @@ class ScopeService:
             return True
 
         user_account = MainhaModels.UserAccount.objects.filter(user=user).first()
-        has_account_permission = False
 
         for current_role in MainhaModels.UserAccount.ROLE_HIERARCHY:
             if user_account.role == min_account_permission:
-                has_account_permission == True
-                break
+                return True
             if current_role == min_account_permission:
-                break
-        
-        return has_account_permission
+                return False
+
+        return False

@@ -1,8 +1,7 @@
 from django.urls import reverse_lazy, reverse
-from django.shortcuts import redirect
 
-from django.views.generic import TemplateView
-from django.views.generic.detail import DetailView
+from django.views.generic.base import RedirectView
+from django.views.generic.detail import DetailView, SingleObjectMixin
 from django.views.generic.edit import DeleteView, UpdateView, FormView
 from django.views.generic.list import ListView
 
@@ -11,6 +10,7 @@ from django.contrib.auth.forms import UserCreationForm
 
 from mainha import forms as MainhaForms
 from mainha import models as MainhaModels
+from mainha import services as MainhaServices
 
 
 class AccountListView(LoginRequiredMixin, PermissionRequiredMixin, ListView):
@@ -19,7 +19,7 @@ class AccountListView(LoginRequiredMixin, PermissionRequiredMixin, ListView):
     template_name = "account/list.html"
 
     def get_queryset(self):
-        return MainhaModels.Account.objects.all().order_by("name")
+        return MainhaServices.ScopeService.list_accounts(self.request.user).order_by("name")
 
 
 class AccountCreateAdminUserView(LoginRequiredMixin, PermissionRequiredMixin, FormView):
@@ -59,9 +59,15 @@ class AccountCreateAdminUserView(LoginRequiredMixin, PermissionRequiredMixin, Fo
             return self.form_invalid(form)
 
 
-class AccountDetailView(LoginRequiredMixin, DetailView):
+class AccountDetailView(LoginRequiredMixin, PermissionRequiredMixin, DetailView):
     model = MainhaModels.Account
     template_name = "account/detail.html"
+
+    def get_queryset(self):
+        return MainhaServices.ScopeService.list_accounts(self.request.user).order_by("name")
+
+    def has_permission(self):
+        return MainhaServices.ScopeService.has_permission(self.request.user, "director")
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -80,24 +86,29 @@ class AccountUpdateAdminUserView(LoginRequiredMixin, PermissionRequiredMixin, Up
         return reverse('account-detail', kwargs=self.kwargs)
 
 
-class AccountUpdateRegularUserView(LoginRequiredMixin, UpdateView):
+class AccountUpdateRegularUserView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
     model = MainhaModels.Account
     form_class = MainhaForms.AccountRegularUserForm
     template_name = "account/update.html"
+
+    def get_queryset(self):
+        return MainhaServices.ScopeService.list_accounts(self.request.user)
+
+    def has_permission(self):
+        return MainhaServices.ScopeService.has_permission(self.request.user, "director")
 
     def get_success_url(self):
         return reverse('account-detail', kwargs=self.kwargs)
 
 
-class AccountUpdateActiveStatusView(LoginRequiredMixin, PermissionRequiredMixin, TemplateView):
+class AccountUpdateActiveStatusView(LoginRequiredMixin, PermissionRequiredMixin, SingleObjectMixin, RedirectView):
+    model = MainhaModels.Account
     permission_required = 'is_staff'
-    template_name = "account/detail.html"
+    pattern_name = 'account-detail'
 
     def dispatch(self, request, *args, **kwargs):
-        account = MainhaModels.Account.objects.get(id=self.kwargs["pk"])
-        account.active = not (account.active)
-        account.save()
-        return redirect('account-detail', pk=account.id)
+        MainhaServices.AccountService.toggle_account_active(self.get_object())
+        return super().dispatch(request, *args, **kwargs)
 
 
 class AccountDeleteView(LoginRequiredMixin, PermissionRequiredMixin, DeleteView):
