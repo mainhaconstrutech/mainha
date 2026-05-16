@@ -34,6 +34,13 @@ class Account(models.Model):
 
 
 class UserAccount(models.Model):
+    ROLE_HIERARCHY = [
+        "director",
+        "manager",
+        "employee",
+        "guest"
+    ]
+
     ROLE_CHOICES = {
         "guest": "guest",
         "employee": "employee",
