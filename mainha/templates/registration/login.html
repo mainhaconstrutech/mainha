@@ -16,10 +16,18 @@
             <div class="pt-4">
                 <form method="post">
                     {% csrf_token %}
-                    {% for error in form.non_field_errors %}
-                        <div class="alert alert-danger">{{ error }}</div>
-                    {% empty %}
-                    {% endfor %}
+
+                    {% if form.errors or form.non_field_errors  %}
+                        <div class="alert alert-danger form-field-errors-alert" role="alert">
+                            {% for error in form.non_field_errors %}
+                                {{ errors }}
+                            {% endfor %}
+                            {% for errors in form.errors.values %}
+                                {{ errors }}
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+
                     <div class="pb-3">
                         {{ form.username.errors }}
                         <label for="id_username" class="form-label text-secondary">
