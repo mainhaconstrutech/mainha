@@ -12,36 +12,36 @@ from mainha import models as MainhaModels
 class StandardListView(LoginRequiredMixin, PermissionRequiredMixin, ListView):
     model = MainhaModels.Standard
     permission_required = 'is_staff'
-    template_name = "standard/list.html"
+    template_name = 'standard/list.html'
 
     def get_queryset(self):
-        return MainhaModels.Standard.objects.all().order_by("-id")
+        return MainhaModels.Standard.objects.all().order_by('-id')
 
 
 class StandardCreateView(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
     model = MainhaModels.Standard
     form_class = MainhaForms.StandardForm
     permission_required = 'is_staff'
-    template_name = "standard/create.html"
-    success_url = reverse_lazy("standard-list")
+    template_name = 'standard/create.html'
+    success_url = reverse_lazy('standard-list')
 
 
 class StandardDetailView(LoginRequiredMixin, PermissionRequiredMixin, DetailView):
     model = MainhaModels.Standard
     permission_required = 'is_staff'
-    template_name = "standard/detail.html"
+    template_name = 'standard/detail.html'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         standard_rules = MainhaModels.StandardRule.objects.filter(
-            standard_id=self.kwargs["pk"]).order_by("group", "name").all()
+            standard_id=self.kwargs['pk']).order_by('group', 'name').all()
         groups = set()
 
-        for group in standard_rules.values("group").all():
-            groups.add(group["group"])
+        for group in standard_rules.values('group').all():
+            groups.add(group['group'])
 
-        context["standard_rules"] = standard_rules
-        context["groups"] = groups
+        context['standard_rules'] = standard_rules
+        context['groups'] = groups
         return context
 
 
@@ -49,7 +49,7 @@ class StandardUpdateView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView
     model = MainhaModels.Standard
     form_class = MainhaForms.StandardForm
     permission_required = 'is_staff'
-    template_name = "standard/update.html"
+    template_name = 'standard/update.html'
 
     def get_success_url(self):
         return reverse('standard-detail', kwargs=self.kwargs)
@@ -58,5 +58,5 @@ class StandardUpdateView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView
 class StandardDeleteView(LoginRequiredMixin, PermissionRequiredMixin, DeleteView):
     model = MainhaModels.Standard
     permission_required = 'is_staff'
-    template_name = "standard/delete.html"
-    success_url = reverse_lazy("standard-list")
+    template_name = 'standard/delete.html'
+    success_url = reverse_lazy('standard-list')

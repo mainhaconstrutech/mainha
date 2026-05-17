@@ -13,17 +13,17 @@ class StandardRuleCreateView(LoginRequiredMixin, PermissionRequiredMixin, Create
     model = MainhaModels.StandardRule
     form_class = MainhaForms.StandardRuleForm
     permission_required = 'is_staff'
-    template_name = "standard_rule/create.html"
+    template_name = 'standard_rule/create.html'
 
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
-        standard = MainhaModels.Standard.objects.get(pk=self.kwargs["standard_id"])
-        kwargs["initial"].update({"standard": standard.id})
+        standard = MainhaModels.Standard.objects.get(pk=self.kwargs['standard_id'])
+        kwargs['initial'].update({'standard': standard.id})
         return kwargs
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["standard_id"] = self.kwargs["standard_id"]
+        context['standard_id'] = self.kwargs['standard_id']
         return context
 
     def get_success_url(self):
@@ -33,26 +33,26 @@ class StandardRuleCreateView(LoginRequiredMixin, PermissionRequiredMixin, Create
 class StandardRuleBulkCreateView(LoginRequiredMixin, PermissionRequiredMixin, FormView):
     form_class = MainhaForms.StandardRuleBulkForm
     permission_required = 'is_staff'
-    template_name = "standard_rule/bulk_create.html"
+    template_name = 'standard_rule/bulk_create.html'
 
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
-        kwargs["initial"].update({"standard": self.kwargs["standard_id"]})
+        kwargs['initial'].update({'standard': self.kwargs['standard_id']})
         return kwargs
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["standard_id"] = self.kwargs["standard_id"]
+        context['standard_id'] = self.kwargs['standard_id']
         return context
 
     def form_valid(self, form):
-        standard = form.cleaned_data["standard"]
+        standard = form.cleaned_data['standard']
         standard_rules = []
-        for standard_rule_data in form.cleaned_data["standard_rules"]:
+        for standard_rule_data in form.cleaned_data['standard_rules']:
             standard_rules.append(MainhaModels.StandardRule(
-                name=standard_rule_data.get("name"),
-                description=standard_rule_data.get("description", ""),
-                group=standard_rule_data.get("group", ""),
+                name=standard_rule_data.get('name'),
+                description=standard_rule_data.get('description', ''),
+                group=standard_rule_data.get('group', ''),
                 standard=standard
             ))
         MainhaModels.StandardRule.objects.bulk_create(standard_rules)
@@ -65,14 +65,14 @@ class StandardRuleBulkCreateView(LoginRequiredMixin, PermissionRequiredMixin, Fo
 class StandardRuleDetailView(LoginRequiredMixin, PermissionRequiredMixin, DetailView):
     model = MainhaModels.StandardRule
     permission_required = 'is_staff'
-    template_name = "standard_rule/detail.html"
+    template_name = 'standard_rule/detail.html'
 
 
 class StandardRuleUpdateView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
     model = MainhaModels.StandardRule
     form_class = MainhaForms.StandardRuleForm
     permission_required = 'is_staff'
-    template_name = "standard_rule/update.html"
+    template_name = 'standard_rule/update.html'
 
     def get_success_url(self):
         return reverse('standard-rule-detail', kwargs=self.kwargs)
@@ -81,7 +81,7 @@ class StandardRuleUpdateView(LoginRequiredMixin, PermissionRequiredMixin, Update
 class StandardRuleDeleteView(LoginRequiredMixin, PermissionRequiredMixin, DeleteView):
     model = MainhaModels.StandardRule
     permission_required = 'is_staff'
-    template_name = "standard_rule/delete.html"
+    template_name = 'standard_rule/delete.html'
 
     def get_success_url(self):
         return reverse('standard-detail', kwargs={'pk': self.kwargs['standard_id']})

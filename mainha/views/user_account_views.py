@@ -1,4 +1,4 @@
-from django.urls import reverse_lazy, reverse
+from django.urls import reverse
 
 from django.views.generic.detail import SingleObjectMixin
 from django.views.generic.edit import DeleteView, UpdateView, FormView

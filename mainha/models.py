@@ -4,19 +4,19 @@ from django.contrib.auth.models import User
 
 class Account(models.Model):
     SUBSCRIPTION_CHOICES = {
-        "trial": "trial",
-        "basic": "basic",
-        "intermediate": "intermediate",
-        "advanced": "advanced",
-        "customized": "customized"
+        'trial': 'trial',
+        'basic': 'basic',
+        'intermediate': 'intermediate',
+        'advanced': 'advanced',
+        'customized': 'customized'
     }
 
     PAYMENT_STATUS_CHOICES = {
-        "free": "free",
-        "awaiting_payment": "awaiting_payment",
-        "paid": "paid",
-        "not_paid": "not_paid",
-        "expired": "expired"
+        'free': 'free',
+        'awaiting_payment': 'awaiting_payment',
+        'paid': 'paid',
+        'not_paid': 'not_paid',
+        'expired': 'expired'
     }
 
     name = models.CharField(max_length=512)
@@ -24,8 +24,8 @@ class Account(models.Model):
     email = models.CharField(max_length=512, null=True, default=None)
     phone = models.CharField(max_length=512, null=True, default=None)
     active = models.BooleanField(default=True)
-    subscription = models.CharField(max_length=512, choices=SUBSCRIPTION_CHOICES, default="trial")
-    payment_status = models.CharField(max_length=512, choices=PAYMENT_STATUS_CHOICES, default="free")
+    subscription = models.CharField(max_length=512, choices=SUBSCRIPTION_CHOICES, default='trial')
+    payment_status = models.CharField(max_length=512, choices=PAYMENT_STATUS_CHOICES, default='free')
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -35,37 +35,37 @@ class Account(models.Model):
 
 class UserAccount(models.Model):
     ROLE_HIERARCHY = [
-        "director",
-        "manager",
-        "employee",
-        "guest"
+        'director',
+        'manager',
+        'employee',
+        'guest'
     ]
 
     ROLE_CHOICES = {
-        "guest": "guest",
-        "employee": "employee",
-        "manager": "manager",
-        "director": "director"
+        'guest': 'guest',
+        'employee': 'employee',
+        'manager': 'manager',
+        'director': 'director'
     }
 
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     account = models.ForeignKey(Account, on_delete=models.SET_NULL, null=True)
     active = models.BooleanField(default=True)
-    role = models.CharField(max_length=512, choices=ROLE_CHOICES, default="director")
+    role = models.CharField(max_length=512, choices=ROLE_CHOICES, default='director')
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
         return f"{self.user.username} ({self.role}) [{self.account.name}]"
-    
+
     class Meta:
         constraints = [
             models.UniqueConstraint(
-                fields=['user'], 
+                fields=['user'],
                 name='unique_user'
             ),
             models.UniqueConstraint(
-                fields=['user', 'account'], 
+                fields=['user', 'account'],
                 name='unique_user_in_account'
             ),
         ]
@@ -73,17 +73,17 @@ class UserAccount(models.Model):
 
 class Project(models.Model):
     STATUS_CHOICES = {
-        "checking": "Checking",
-        "analysis": "Analysis",
-        "archived": "Archived",
-        "failed": "Failed",
-        "pending": "Pending",
-        "approved": "Approved"
+        'checking': 'Checking',
+        'analysis': 'Analysis',
+        'archived': 'Archived',
+        'failed': 'Failed',
+        'pending': 'Pending',
+        'approved': 'Approved'
     }
 
     name = models.CharField(max_length=512)
-    description = models.TextField(blank=True, default="")
-    status = models.CharField(max_length=64, choices=STATUS_CHOICES, default="checking")
+    description = models.TextField(blank=True, default='')
+    status = models.CharField(max_length=64, choices=STATUS_CHOICES, default='checking')
     account = models.ForeignKey(Account, on_delete=models.CASCADE, null=True, default=None)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
@@ -105,7 +105,7 @@ class UserProject(models.Model):
 
 class Standard(models.Model):
     name = models.CharField(max_length=512)
-    description = models.TextField(blank=True, default="")
+    description = models.TextField(blank=True, default='')
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -115,8 +115,8 @@ class Standard(models.Model):
 
 class StandardRule(models.Model):
     name = models.CharField(max_length=512)
-    description = models.TextField(blank=True, default="")
-    group = models.CharField(max_length=256, blank=True, default="")
+    description = models.TextField(blank=True, default='')
+    group = models.CharField(max_length=256, blank=True, default='')
     standard = models.ForeignKey(Standard, on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
@@ -127,15 +127,15 @@ class StandardRule(models.Model):
 
 class Validation(models.Model):
     STATUS_CHOICES = {
-        "analysis": "Analysis",
-        "failed": "Failed",
-        "pending": "Pending",
-        "approved": "Approved"
+        'analysis': 'Analysis',
+        'failed': 'Failed',
+        'pending': 'Pending',
+        'approved': 'Approved'
     }
 
     project = models.ForeignKey(Project, on_delete=models.CASCADE)
     standard = models.ForeignKey(Standard, null=True, on_delete=models.SET_NULL)
-    status = models.CharField(max_length=64, choices=STATUS_CHOICES, default="analysis")
+    status = models.CharField(max_length=64, choices=STATUS_CHOICES, default='analysis')
     analyzed = models.BooleanField(null=False, default=False)
     analyzed_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, default=None)
     created_at = models.DateTimeField(auto_now_add=True)
@@ -147,11 +147,21 @@ class Validation(models.Model):
             standard_name = self.standard.name
         return f"{self.id} - {self.project.name} <> {standard_name}"
 
+    def save(self, *args, **kwargs):
+        is_new_obj = True if not self.pk else False
+        result = super().save(*args, **kwargs)
+
+        if is_new_obj:
+            self.project.status = 'analysis'
+            self.project.save()
+
+        return result
+
     def set_analysis_result(self):
-        self.status = "approved"
+        self.status = 'approved'
         for validation_rule in self.validationrule_set.all():
             if validation_rule.fulfilled == False:
-                self.status = "failed"
+                self.status = 'failed'
                 break
         return self
 

@@ -93,10 +93,11 @@ class Scopes:
 
         user_account = MainhaModels.UserAccount.objects.filter(user=user).first()
 
-        for current_role in MainhaModels.UserAccount.ROLE_HIERARCHY:
-            if user_account.role == min_account_permission:
-                return True
-            if current_role == min_account_permission:
-                return False
+        if min_account_permission in MainhaModels.UserAccount.ROLE_HIERARCHY:
+            for current_role in MainhaModels.UserAccount.ROLE_HIERARCHY:
+                if user_account.role == current_role:
+                    return True
+                if current_role == min_account_permission:
+                    return False
 
         return False

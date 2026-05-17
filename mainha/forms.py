@@ -332,14 +332,14 @@ class ValidationForm(forms.ModelForm):
     )
 
     def __init__(self, *args, **kwargs):
+        self.user = kwargs.pop('user', None)
         super().__init__(*args, **kwargs)
-        user = kwargs.get('initial').get('user')
-        project_id = kwargs.get('initial').get('project')
 
-        if project_id is None:
-            projects = MainhaModels.Project.objects.filter(created_by=user).all()
-        else:
-            projects = MainhaModels.Project.objects.filter(pk=project_id, created_by=user).all()
+        project_id = kwargs.get('initial').get('project')
+        projects = MainhaScopes.Scopes.list_projects(self.user)
+
+        if project_id:
+            projects = projects.filter(pk=project_id).all()
 
         self.fields['project'].queryset = projects
         self.fields['project'].widget.attrs.update({
@@ -350,6 +350,14 @@ class ValidationForm(forms.ModelForm):
             'class': 'form-control',
             'placeholder': 'Norma'
         })
+
+    def clean(self):
+        cleaned_data = super().clean()
+        project = self.cleaned_data.get('project')
+
+        if not MainhaScopes.Scopes.list_projects(self.user).filter(pk=project.pk).exists():
+            raise forms.ValidationError('Cannot send this project to analysis.')
+        return cleaned_data
 
     class Meta:
         model = MainhaModels.Validation
