@@ -18,3 +18,31 @@ class AccountService:
         account.save()
 
         return account
+
+    @staticmethod
+    def list_user_account_in_account(account: MainhaModels.Account):
+        """
+        Return list of user_account in a account.
+
+        Args:
+            account (MainhaModels.Account): Account.
+        Returns:
+            List: List of UserAccount in account.
+        """
+        return MainhaModels.UserAccount.objects.filter(account=account)
+
+    @staticmethod
+    def list_users_in_account(account: MainhaModels.Account):
+        """
+        Return list of users in a account.
+
+        Args:
+            account (MainhaModels.Account): Account.
+        Returns:
+            List: List of User in account.
+        """
+        account_user_ids_in_account = AccountService.list_user_account_in_account(
+            account
+        ).values_list('user__id', flat=True)
+
+        return User.objects.filter(id__in=account_user_ids_in_account)

@@ -9,13 +9,12 @@ from django.contrib.auth.forms import UserCreationForm
 from mainha import forms as MainhaForms
 from mainha import models as MainhaModels
 from mainha import scopes as MainhaScopes
-from mainha import services as MainhaServices
 
 
 class UserAccountCreateView(LoginRequiredMixin, PermissionRequiredMixin, SingleObjectMixin, FormView):
     model = MainhaModels.Account
     form_class = MainhaForms.CreateUserAccountForm
-    template_name = "user_account/create.html"
+    template_name = 'user_account/create.html'
 
     def get_queryset(self):
         return MainhaScopes.Scopes.list_accounts(self.request.user)
@@ -32,15 +31,15 @@ class UserAccountCreateView(LoginRequiredMixin, PermissionRequiredMixin, SingleO
 
         if form.is_valid():
             user_form = UserCreationForm({
-                "email": form.cleaned_data.get("email"),
-                "username": form.cleaned_data.get("email"),
-                "password1": form.cleaned_data.get("password"),
-                "password2": form.cleaned_data.get("password")
+                'email': form.cleaned_data.get('email'),
+                'username': form.cleaned_data.get('email'),
+                'password1': form.cleaned_data.get('password'),
+                'password2': form.cleaned_data.get('password')
             })
 
             if user_form.is_valid():
                 new_user = user_form.save()
-                role = form.cleaned_data.get("role")
+                role = form.cleaned_data.get('role')
                 account = self.get_object()
                 if not self.request.user.is_staff:
                     account = self.request.user.useraccount_set.first().account
@@ -59,7 +58,7 @@ class UserAccountCreateView(LoginRequiredMixin, PermissionRequiredMixin, SingleO
 class UserAccountUpdateView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
     model = MainhaModels.UserAccount
     form_class = MainhaForms.UpdateUserAccountForm
-    template_name = "user_account/update.html"
+    template_name = 'user_account/update.html'
 
     def has_permission(self):
         return MainhaScopes.Scopes.has_director_permission(self.request.user)
@@ -70,7 +69,7 @@ class UserAccountUpdateView(LoginRequiredMixin, PermissionRequiredMixin, UpdateV
 
 class UserAccountDeleteView(LoginRequiredMixin, PermissionRequiredMixin, DeleteView):
     model = MainhaModels.UserAccount
-    template_name = "user_account/delete.html"
+    template_name = 'user_account/delete.html'
 
     def has_permission(self):
         return MainhaScopes.Scopes.has_director_permission(self.request.user)

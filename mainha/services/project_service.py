@@ -25,3 +25,31 @@ class ProjectService:
             MainhaModels.UserProject.objects.create(user=user_account.user, project=project)
 
         return project
+
+    @staticmethod
+    def list_user_project_in_project(project: MainhaModels.Project):
+        """
+        Return list of user_project in a project.
+
+        Args:
+            project (MainhaModels.Project): Project.
+        Returns:
+            List: List of UserProject in project.
+        """
+        return MainhaModels.UserProject.objects.filter(project=project)
+
+    @staticmethod
+    def list_users_in_projec(project: MainhaModels.Project):
+        """
+        Return list of users in a account.
+
+        Args:
+            account (MainhaModels.Account): Account.
+        Returns:
+            List: List of User in account.
+        """
+        project_user_ids_in_project = ProjectService.list_user_project_in_project(
+            project
+        ).values_list('user__id', flat=True)
+
+        return User.objects.filter(id__in=project_user_ids_in_project)
