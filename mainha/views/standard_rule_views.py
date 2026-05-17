@@ -8,6 +8,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMix
 from mainha import forms as MainhaForms
 from mainha import models as MainhaModels
 
+
 class StandardRuleCreateView(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
     model = MainhaModels.StandardRule
     form_class = MainhaForms.StandardRuleForm
@@ -16,8 +17,7 @@ class StandardRuleCreateView(LoginRequiredMixin, PermissionRequiredMixin, Create
 
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
-        standard = MainhaModels.Standard.objects.get(
-            pk=self.kwargs["standard_id"])
+        standard = MainhaModels.Standard.objects.get(pk=self.kwargs["standard_id"])
         kwargs["initial"].update({"standard": standard.id})
         return kwargs
 

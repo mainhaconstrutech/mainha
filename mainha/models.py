@@ -57,6 +57,18 @@ class UserAccount(models.Model):
 
     def __str__(self):
         return f"{self.user.username} ({self.role}) [{self.account.name}]"
+    
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(
+                fields=['user'], 
+                name='unique_user'
+            ),
+            models.UniqueConstraint(
+                fields=['user', 'account'], 
+                name='unique_user_in_account'
+            ),
+        ]
 
 
 class Project(models.Model):

@@ -1,6 +1,6 @@
 from django.urls import reverse_lazy, reverse
 
-# from django.views.generic.detail import DetailView
+from django.views.generic.detail import SingleObjectMixin
 from django.views.generic.edit import DeleteView, UpdateView, FormView
 
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
@@ -8,23 +8,23 @@ from django.contrib.auth.forms import UserCreationForm
 
 from mainha import forms as MainhaForms
 from mainha import models as MainhaModels
+from mainha import services as MainhaServices
 
-class UserAccountCreateView(LoginRequiredMixin, PermissionRequiredMixin, FormView):
+
+class UserAccountCreateView(LoginRequiredMixin, PermissionRequiredMixin, SingleObjectMixin, FormView):
+    model = MainhaModels.Account
     form_class = MainhaForms.CreateUserAccountForm
     template_name = "user_account/create.html"
 
-    def has_permission(self):
-        user_account = MainhaModels.UserAccount.objects.filter(
-            user=self.request.user,
-            account_id=self.kwargs.get("pk")
-        ).first()
+    def get_queryset(self):
+        return MainhaServices.ScopeService.list_accounts(self.request.user)
 
-        if self.request.user.is_staff:
-            return True
-        elif user_account is not None and user_account.role == "director":
-            return True
-        else:
-            return False
+    def has_permission(self):
+        return MainhaServices.ScopeService.has_director_permission(self.request.user)
+
+    def get(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        return super().get(request, *args, **kwargs)
 
     def post(self, request, *args, **kwargs):
         form = MainhaForms.CreateUserAccountForm(request.POST)
@@ -39,8 +39,10 @@ class UserAccountCreateView(LoginRequiredMixin, PermissionRequiredMixin, FormVie
 
             if user_form.is_valid():
                 new_user = user_form.save()
-                account = MainhaModels.Account.objects.get(id=self.kwargs.get("pk"))
                 role = form.cleaned_data.get("role")
+                account = self.get_object()
+                if not self.request.user.is_staff:
+                    account = self.request.user.useraccount_set.first().account
                 MainhaModels.UserAccount.objects.create(user=new_user, account=account, role=role)
 
                 return self.form_valid(form)
@@ -48,15 +50,10 @@ class UserAccountCreateView(LoginRequiredMixin, PermissionRequiredMixin, FormVie
                 return self.form_invalid(form)
         else:
             return self.form_invalid(form)
-        
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context["object"] = MainhaModels.Account.objects.get(id=self.kwargs.get("pk"))
-        return context
-        
+
     def get_success_url(self):
         return reverse('account-detail', kwargs=self.kwargs)
-    
+
 
 class UserAccountUpdateView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
     model = MainhaModels.UserAccount
@@ -64,39 +61,19 @@ class UserAccountUpdateView(LoginRequiredMixin, PermissionRequiredMixin, UpdateV
     template_name = "user_account/update.html"
 
     def has_permission(self):
-        user_account = MainhaModels.UserAccount.objects.filter(
-            user=self.request.user,
-            account_id=self.kwargs.get("account_id")
-        ).first()
-
-        if self.request.user.is_staff:
-            return True
-        elif user_account is not None and user_account.role == "director":
-            return True
-        else:
-            return False
+        return MainhaServices.ScopeService.has_director_permission(self.request.user)
 
     def get_success_url(self):
-        return reverse('account-detail', kwargs={'pk': self.kwargs['account_id']})
-    
+        return reverse('account-detail', kwargs={'pk': self.kwargs.get('account_id')})
+
 
 class UserAccountDeleteView(LoginRequiredMixin, PermissionRequiredMixin, DeleteView):
     model = MainhaModels.UserAccount
     template_name = "user_account/delete.html"
 
     def has_permission(self):
-        user_account = MainhaModels.UserAccount.objects.filter(
-            user=self.request.user,
-            account_id=self.kwargs.get("account_id")
-        ).first()
+        return MainhaServices.ScopeService.has_director_permission(self.request.user)
 
-        if self.request.user.is_staff:
-            return True
-        elif user_account is not None and user_account.role == "director":
-            return True
-        else:
-            return False
-        
     def form_valid(self, form):
         user = self.object.user
         result = super().form_valid(form)
@@ -105,4 +82,4 @@ class UserAccountDeleteView(LoginRequiredMixin, PermissionRequiredMixin, DeleteV
         return result
 
     def get_success_url(self):
-        return reverse('account-detail', kwargs={'pk': self.kwargs['account_id']})
+        return reverse('account-detail', kwargs={'pk': self.kwargs.get('account_id')})

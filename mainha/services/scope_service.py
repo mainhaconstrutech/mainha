@@ -14,7 +14,7 @@ class ScopeService:
         Returns:
             List: List of accounts which user has access allowed.
         """
-        if user.is_superuser or user.is_staff:
+        if user.is_staff:
             return MainhaModels.Account.objects.all()
         else:
             user_account = MainhaModels.UserAccount.objects.filter(user=user).first()
@@ -30,7 +30,7 @@ class ScopeService:
         Returns:
             List: List of projects which user has access allowed.
         """
-        if user.is_superuser or user.is_staff:
+        if user.is_staff:
             return MainhaModels.Project.objects.all()
         else:
             user_account = MainhaModels.UserAccount.objects.filter(user=user).first()
@@ -40,6 +40,42 @@ class ScopeService:
             else:
                 user_included_project_ids = MainhaModels.UserProject.objects.filter(user=user).values("project_id")
                 return MainhaModels.Project.objects.filter(id__in=user_included_project_ids).all()
+
+    @staticmethod
+    def has_director_permission(user: User):
+        """
+        Check if current user has director permission allowed.
+
+        Args:
+            user (User): Current user.
+        Returns:
+            Boolean: User has permission.
+        """
+        return ScopeService.has_permission(user, 'director')
+
+    @staticmethod
+    def has_manager_permission(user: User):
+        """
+        Check if current user has manager permission allowed.
+
+        Args:
+            user (User): Current user.
+        Returns:
+            Boolean: User has permission.
+        """
+        return ScopeService.has_permission(user, 'manager')
+
+    @staticmethod
+    def has_employee_permission(user: User):
+        """
+        Check if current user has employee permission allowed.
+
+        Args:
+            user (User): Current user.
+        Returns:
+            Boolean: User has permission.
+        """
+        return ScopeService.has_permission(user, 'employee')
 
     @staticmethod
     def has_permission(user: User, min_account_permission: str):
@@ -52,7 +88,7 @@ class ScopeService:
         Returns:
             Boolean: User has permission.
         """
-        if user.is_superuser or user.is_staff:
+        if user.is_staff:
             return True
 
         user_account = MainhaModels.UserAccount.objects.filter(user=user).first()

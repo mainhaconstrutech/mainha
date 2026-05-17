@@ -67,7 +67,7 @@ class AccountDetailView(LoginRequiredMixin, PermissionRequiredMixin, DetailView)
         return MainhaServices.ScopeService.list_accounts(self.request.user).order_by("name")
 
     def has_permission(self):
-        return MainhaServices.ScopeService.has_permission(self.request.user, "director")
+        return MainhaServices.ScopeService.has_director_permission(self.request.user)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -95,7 +95,7 @@ class AccountUpdateRegularUserView(LoginRequiredMixin, PermissionRequiredMixin, 
         return MainhaServices.ScopeService.list_accounts(self.request.user)
 
     def has_permission(self):
-        return MainhaServices.ScopeService.has_permission(self.request.user, "director")
+        return MainhaServices.ScopeService.has_director_permission(self.request.user)
 
     def get_success_url(self):
         return reverse('account-detail', kwargs=self.kwargs)
