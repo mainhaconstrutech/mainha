@@ -2,7 +2,7 @@ from django.views.generic import TemplateView
 
 from django.contrib.auth.mixins import LoginRequiredMixin
 
-from mainha.services import ScopeService
+from mainha import scopes as MainhaScopes
 
 
 class DashboardView(LoginRequiredMixin, TemplateView):
@@ -10,7 +10,7 @@ class DashboardView(LoginRequiredMixin, TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        all_projects = ScopeService.list_projects(self.request.user).order_by("-updated_at")
+        all_projects = MainhaScopes.Scopes.list_projects(self.request.user).order_by("-updated_at")
         projects_all_total = all_projects.count()
         projects_success_total = all_projects.filter(status="success").count()
         projects_success_rate = projects_success_total / \

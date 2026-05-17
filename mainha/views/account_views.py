@@ -10,6 +10,7 @@ from django.contrib.auth.forms import UserCreationForm
 
 from mainha import forms as MainhaForms
 from mainha import models as MainhaModels
+from mainha import scopes as MainhaScopes
 from mainha import services as MainhaServices
 
 
@@ -19,7 +20,7 @@ class AccountListView(LoginRequiredMixin, PermissionRequiredMixin, ListView):
     template_name = "account/list.html"
 
     def get_queryset(self):
-        return MainhaServices.ScopeService.list_accounts(self.request.user).order_by("name")
+        return MainhaScopes.Scopes.list_accounts(self.request.user).order_by("name")
 
 
 class AccountCreateAdminUserView(LoginRequiredMixin, PermissionRequiredMixin, FormView):
@@ -64,10 +65,10 @@ class AccountDetailView(LoginRequiredMixin, PermissionRequiredMixin, DetailView)
     template_name = "account/detail.html"
 
     def get_queryset(self):
-        return MainhaServices.ScopeService.list_accounts(self.request.user).order_by("name")
+        return MainhaScopes.Scopes.list_accounts(self.request.user).order_by("name")
 
     def has_permission(self):
-        return MainhaServices.ScopeService.has_director_permission(self.request.user)
+        return MainhaScopes.Scopes.has_director_permission(self.request.user)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -92,10 +93,10 @@ class AccountUpdateRegularUserView(LoginRequiredMixin, PermissionRequiredMixin, 
     template_name = "account/update.html"
 
     def get_queryset(self):
-        return MainhaServices.ScopeService.list_accounts(self.request.user)
+        return MainhaScopes.Scopes.list_accounts(self.request.user)
 
     def has_permission(self):
-        return MainhaServices.ScopeService.has_director_permission(self.request.user)
+        return MainhaScopes.Scopes.has_director_permission(self.request.user)
 
     def get_success_url(self):
         return reverse('account-detail', kwargs=self.kwargs)

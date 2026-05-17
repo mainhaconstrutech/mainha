@@ -8,6 +8,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 
 from mainha import forms as MainhaForms
 from mainha import models as MainhaModels
+from mainha import scopes as MainhaScopes
 from mainha import services as MainhaServices
 
 
@@ -16,7 +17,7 @@ class ProjectListView(LoginRequiredMixin, ListView):
     template_name = "project/list.html"
 
     def get_queryset(self):
-        return MainhaServices.ScopeService.list_projects(self.request.user)
+        return MainhaScopes.Scopes.list_projects(self.request.user)
 
 
 class ProjectCreateView(LoginRequiredMixin, CreateView):
@@ -37,7 +38,7 @@ class ProjectDetailView(LoginRequiredMixin, DetailView):
     template_name = "project/detail.html"
 
     def get_queryset(self):
-        return MainhaServices.ScopeService.list_projects(self.request.user)
+        return MainhaScopes.Scopes.list_projects(self.request.user)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -51,7 +52,7 @@ class ProjectUpdateView(LoginRequiredMixin, UpdateView):
     template_name = "project/update.html"
 
     def get_queryset(self):
-        return MainhaServices.ScopeService.list_projects(self.request.user)
+        return MainhaScopes.Scopes.list_projects(self.request.user)
 
     def get_success_url(self):
         return reverse('project-detail', kwargs=self.kwargs)
@@ -63,4 +64,4 @@ class ProjectDeleteView(LoginRequiredMixin, DeleteView):
     success_url = reverse_lazy("project-list")
 
     def get_queryset(self):
-        return MainhaServices.ScopeService.list_projects(self.request.user)
+        return MainhaScopes.Scopes.list_projects(self.request.user)
