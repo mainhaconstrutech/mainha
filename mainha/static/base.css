@@ -21,6 +21,8 @@
     --btn-bg-danger-active: #B02A37;
     --btn-bg-primary-hover: #0B5ED7;
     --btn-bg-primary-active: #0A58CA;
+    --btn-bg-secondary-hover: #5C636A;
+    --btn-bg-secondary-active: #565E64;
     --btn-bg-success-hover: #157347;
     --btn-bg-success-active: #146C43;
     --btn-bg-warning: #FFC107;
@@ -244,6 +246,13 @@ body main {
     --bs-dropdown-link-hover-color: var(--white, #FFFFFF);
     --bs-dropdown-link-hover-bg: var(--btn-bg-primary-hover, #0B5ED7);
     --bs-dropdown-link-active-bg: var(--btn-bg-primary-active, #0A58CA);
+    --bs-dropdown-link-active-color: var(--white, #FFFFFF);
+}
+
+.dropdown li.secondary {
+    --bs-dropdown-link-hover-color: var(--white, #FFFFFF);
+    --bs-dropdown-link-hover-bg: var(--btn-bg-secondary-hover, #5C636A);
+    --bs-dropdown-link-active-bg: var(--btn-bg-secondary-active, #565E64);
     --bs-dropdown-link-active-color: var(--white, #FFFFFF);
 }
 

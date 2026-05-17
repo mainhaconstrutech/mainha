@@ -3,6 +3,14 @@ from django import template
 register = template.Library()
 
 
+@register.filter(name="get_account_id_from_user")
+def get_account_id_from_user(user):
+    user_account = user.useraccount_set.first()
+    if user_account:
+        return user_account.account.id
+    return None
+
+
 @register.filter(name="find_item")
 def find_item(itens_list, id):
     for item in itens_list:
