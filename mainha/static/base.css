@@ -280,3 +280,11 @@ body main {
     --bs-offcanvas-bg: var(--gray100);
     --bs-offcanvas-color: var(--blue800, #1A202C);
 }
+
+.form-field-errors-alert ul {
+    list-style-position: inside;
+}
+
+.form-field-errors-alert ol{
+    list-style-position: inside;
+}

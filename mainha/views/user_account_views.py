@@ -45,7 +45,7 @@ class UserAccountCreateView(LoginRequiredMixin, PermissionRequiredMixin, SingleO
 
                 role = form.cleaned_data.get('role')
                 account = self.object
-                
+
                 if not self.request.user.is_staff:
                     account = self.request.user.useraccount_set.first().account
                 MainhaModels.UserAccount.objects.create(user=new_user, account=account, role=role)
@@ -54,7 +54,8 @@ class UserAccountCreateView(LoginRequiredMixin, PermissionRequiredMixin, SingleO
             else:
                 for field, errors in user_form.errors.items():
                     for error in errors:
-                        form.add_error(field, error)
+                        field_name = field.replace('username', 'email')
+                        form.add_error(field_name, error)
                 form.error_messages = user_form.error_messages
 
                 return self.form_invalid(form)
