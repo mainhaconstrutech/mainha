@@ -27,26 +27,36 @@ class UserAccountCreateView(LoginRequiredMixin, PermissionRequiredMixin, SingleO
         return super().get(request, *args, **kwargs)
 
     def post(self, request, *args, **kwargs):
+        self.object = self.get_object()
         form = MainhaForms.CreateUserAccountForm(request.POST)
 
         if form.is_valid():
             user_form = UserCreationForm({
                 'email': form.cleaned_data.get('email'),
                 'username': form.cleaned_data.get('email'),
-                'password1': form.cleaned_data.get('password'),
-                'password2': form.cleaned_data.get('password')
+                'password1': form.cleaned_data.get('password1'),
+                'password2': form.cleaned_data.get('password2')
             })
 
             if user_form.is_valid():
                 new_user = user_form.save()
+                new_user.email = new_user.username
+                new_user.save()
+
                 role = form.cleaned_data.get('role')
-                account = self.get_object()
+                account = self.object
+                
                 if not self.request.user.is_staff:
                     account = self.request.user.useraccount_set.first().account
                 MainhaModels.UserAccount.objects.create(user=new_user, account=account, role=role)
 
                 return self.form_valid(form)
             else:
+                for field, errors in user_form.errors.items():
+                    for error in errors:
+                        form.add_error(field, error)
+                form.error_messages = user_form.error_messages
+
                 return self.form_invalid(form)
         else:
             return self.form_invalid(form)

@@ -36,8 +36,8 @@ class AccountCreateAdminUserView(LoginRequiredMixin, PermissionRequiredMixin, Fo
             user_form = UserCreationForm({
                 'email': form.cleaned_data.get('user_email'),
                 'username': form.cleaned_data.get('user_email'),
-                'password1': form.cleaned_data.get('user_password'),
-                'password2': form.cleaned_data.get('user_password')
+                'password1': form.cleaned_data.get('user_password1'),
+                'password2': form.cleaned_data.get('user_password2')
             })
 
             account_form = MainhaForms.AccountAdminUserForm({
@@ -50,11 +50,27 @@ class AccountCreateAdminUserView(LoginRequiredMixin, PermissionRequiredMixin, Fo
 
             if user_form.is_valid() and account_form.is_valid():
                 new_user = user_form.save()
+                new_user.email = new_user.username
+                new_user.save()
+
                 new_account = account_form.save()
+
                 MainhaModels.UserAccount.objects.create(user=new_user, account=new_account)
 
                 return self.form_valid(form)
             else:
+                for field, errors in user_form.errors.items():
+                    for error in errors:
+                        field_name = f"user_{field.replace('username', 'email')}"
+                        form.add_error(field_name, error)
+                # form.error_messages = user_form.error_messages
+
+                for field, errors in account_form.errors.items():
+                    for error in errors:
+                        field_name = f"account_{field}"
+                        form.add_error(field_name, error)
+                # form.error_messages = account_form.error_messages
+
                 return self.form_invalid(form)
         else:
             return self.form_invalid(form)

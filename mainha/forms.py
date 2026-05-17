@@ -50,8 +50,12 @@ class CreateAccountAdminUserForm(forms.Form):
         label='E-mail do administrador',
         widget=forms.EmailInput(attrs={'class': 'form-control', 'placeholder': 'personal@email.com'})
     )
-    user_password = forms.CharField(
-        label='Senha do administradors',
+    user_password1 = forms.CharField(
+        label='Senha do administrador',
+        widget=forms.PasswordInput(attrs={'class': 'form-control'})
+    )
+    user_password2 = forms.CharField(
+        label='Confirmar Senha do administrador',
         widget=forms.PasswordInput(attrs={'class': 'form-control'})
     )
 
@@ -135,8 +139,12 @@ class CreateUserAccountForm(forms.Form):
         initial='employee',
         widget=forms.Select(attrs={'class': 'form-select'})
     )
-    password = forms.CharField(
+    password1 = forms.CharField(
         label='Senha',
+        widget=forms.PasswordInput(attrs={'class': 'form-control'})
+    )
+    password2 = forms.CharField(
+        label='Confirmar Senha',
         widget=forms.PasswordInput(attrs={'class': 'form-control'})
     )
 
