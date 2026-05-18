@@ -15,7 +15,7 @@
     <div class="bg-white rounded-3 shadow-sm py-2">
       <div class="m-3">
         {% url 'account-list' as btn_back_url %}
-        {% include "base_form_with_password_field.html" with form=form btn_submit_txt='Criar Conta' btn_back_url=btn_back_url %}
+        {% include "base_form.html" with form=form btn_submit_txt='Criar Conta' btn_back_url=btn_back_url has_password_field=True %}
       </div>
     </div>
   </article>

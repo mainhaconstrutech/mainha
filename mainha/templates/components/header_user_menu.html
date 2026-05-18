@@ -1,0 +1,38 @@
+{% load mainha_utils_tags %}
+
+<div class="dropdown">
+    <button class="btn dropdown-toggle border-0" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+        <i class="fa-solid fa-circle-user fa-2xl" ></i>
+    </button>
+    <ul class="dropdown-menu">
+        <li class="primary">
+            <a class="dropdown-item" href="#">
+                <i class="fa-solid fa-user fa-lg me-2"></i>
+                <span>Meu perfil</span>
+            </a>
+        </li>
+
+        {% with account_id=user|get_account_id_from_user user_role=user|get_user_account_role %}
+            {% if account_id and user_role == 'director' %}
+                <li class="secondary">
+                    <a class="dropdown-item" href="{% url 'account-detail' pk=account_id %}">
+                        <i class="fa-solid fa-gear fa-lg me-2"></i>
+                        <span>Conta</span>
+                    </a>
+                </li>
+            {% endif %}
+        {% endwith %}
+
+
+        <li><hr class="dropdown-divider"></li>
+        <li class="danger">
+            <form action="{% url 'logout' %}" method="post">
+                {% csrf_token %}
+                <button class="dropdown-item" type="submit">
+                    <i class="fa-solid fa-arrow-right-from-bracket fa-lg me-2"></i>
+                    <span style="color: var(--gray800);">Sair</span>
+                </button>
+            </form>
+        </li>
+    </ul>
+</div>

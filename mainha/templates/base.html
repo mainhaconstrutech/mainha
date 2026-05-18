@@ -1,5 +1,4 @@
 {% load static %}
-{% load mainha_utils_tags %}
 
 <!DOCTYPE html>
 <html lang="pt-br">
@@ -20,12 +19,12 @@
     <body class="d-flex flex-row align-items-stretch">
         <div class="offcanvas offcanvas-start d-md-none" tabindex="-1" id="asideMenu">
             <aside class="d-flex flex-column justify-content-between w-100 h-100">
-                {% include "aside_menu_list.html" %}
+                {% include "components/aside_menu_list.html" %}
             </aside>
         </div>
         <div class="d-none d-md-flex">
             <aside class="d-flex flex-column justify-content-between">
-                {% include "aside_menu_list.html" %}
+                {% include "components/aside_menu_list.html" %}
             </aside>
         </div>
         <div class="flex-grow-1">
@@ -40,42 +39,7 @@
                     {% endblock %}
                 </div>
                 <div>
-                    <div class="dropdown">
-                        <button class="btn dropdown-toggle border-0" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                            <i class="fa-solid fa-circle-user fa-2xl" ></i>
-                        </button>
-                        <ul class="dropdown-menu">
-                            <li class="primary">
-                                <a class="dropdown-item" href="#">
-                                    <i class="fa-solid fa-file-waveform fa-lg me-2"></i>
-                                    <span>Meu perfil</span>
-                                </a>
-                            </li>
-
-                            {% with account_id=user|get_account_id_from_user %}
-                                {% if account_id %}
-                                    <li class="secondary">
-                                        <a class="dropdown-item" href="{% url 'account-detail' pk=account_id %}">
-                                            <i class="fa-solid fa-gear fa-lg me-2"></i>
-                                            <span>Configurações</span>
-                                        </a>
-                                    </li>
-                                {% endif %}
-                            {% endwith %}
-
-
-                            <li><hr class="dropdown-divider"></li>
-                            <li class="danger">
-                                <form action="{% url 'logout' %}" method="post">
-                                    {% csrf_token %}
-                                    <button class="dropdown-item" type="submit">
-                                        <i class="fa-solid fa-arrow-right-from-bracket fa-lg me-2"></i>
-                                        <span style="color: var(--gray800);">Sair</span>
-                                    </button>
-                                </form>
-                            </li>
-                        </ul>
-                    </div>
+                    {% include "components/header_user_menu.html" %}
                 </div>
             </header>
             <main class="overflow-y-auto p-3 p-md-4">

@@ -3,6 +3,14 @@ from django import template
 register = template.Library()
 
 
+@register.filter(name="get_user_account_role")
+def get_user_account_role(user):
+    user_account = user.useraccount_set.first()
+    if user_account:
+        return user_account.role
+    return None
+
+
 @register.filter(name="get_account_id_from_user")
 def get_account_id_from_user(user):
     user_account = user.useraccount_set.first()
@@ -38,17 +46,3 @@ def show_report_link(status):
     if status in ['archived', 'failed', 'approved']:
         return True
     return False
-
-
-@register.filter(name="is_password1_field")
-def is_password1_field(name):
-    if name.find('password1') == -1:
-        return False
-    return True
-
-
-@register.filter(name="is_password2_field")
-def is_password1_field(name):
-    if name.find('password2') == -1:
-        return False
-    return True
