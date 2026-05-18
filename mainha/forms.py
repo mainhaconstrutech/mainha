@@ -8,6 +8,26 @@ from mainha import scopes as MainhaScopes
 from mainha import services as MainhaServices
 
 
+class UserForm(forms.ModelForm):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['first_name'].widget.attrs.update({
+            'class': 'form-control',
+            'placeholder': 'Nome'
+        })
+        self.fields['last_name'].widget.attrs.update({
+            'class': 'form-control',
+            'placeholder': 'Sobrenome'
+        })
+    class Meta:
+        model = User
+        fields = ['first_name', 'last_name']
+        labels = {
+            'first_name': 'Nome',
+            'last_name': 'Sobrenome'
+        }
+
+
 class UserRegistrationForm(forms.ModelForm):
     class Meta:
         model = User
