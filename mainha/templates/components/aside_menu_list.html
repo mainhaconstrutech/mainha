@@ -10,6 +10,14 @@
 
         {% if user.is_staff %}
         <div class="menu-group">
+            <div class="menu-group-title mt-3 mb-1">CONTAS</div>
+            <a class="menu-item" href="{% url 'account-list' %}">
+                <i class="fa-solid fa-user-gear fa-lg me-2"></i>
+                <span class="text-gray-800">Contas</span>
+            </a>
+        </div>
+
+        <div class="menu-group">
             <div class="menu-group-title mt-3 mb-1">NORMAS</div>
             <a class="menu-item" href="{% url 'standard-create' %}">
                 <i class="fa-solid fa-clipboard-list fa-lg me-2"></i>
