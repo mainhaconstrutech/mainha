@@ -27,16 +27,20 @@
 
                 {% if has_password_field|default:False %}
                     {% if 'password1' in field.html_name %}
-                        <ul class="py-2 px-1" style="list-style-position: inside">
-                            <li>Password can’t be too similar to your other personal information.</li>
-                            <li>Password must contain at least 8 characters.</li>
-                            <li>Password can’t be a commonly used password.</li>
-                            <li>Password can’t be entirely numeric.</li>
-                        </ul>
+                        <div class="alert alert-info form-field-errors-alert mb-0 mt-3" role="alert">
+                            <ul class="py-2 px-1">
+                                <li>Password can’t be too similar to your other personal information.</li>
+                                <li>Password must contain at least 8 characters.</li>
+                                <li>Password can’t be a commonly used password.</li>
+                                <li>Password can’t be entirely numeric.</li>
+                            </ul>
+                        </div>
                     {% elif 'password2' in field.html_name %}
-                        <ul class="py-2 px-1" style="list-style-position: inside">
-                            <li>Enter the same password as before, for verification.</li>
-                        </ul>
+                        <div class="alert alert-info form-field-errors-alert mb-0 mt-3" role="alert">
+                            <ul class="py-2 px-1">
+                                <li>Enter the same password as before, for verification.</li>
+                            </ul>
+                        </div>
                     {% endif %}
                 {% endif %}
             </div>

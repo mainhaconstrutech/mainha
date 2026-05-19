@@ -35,7 +35,7 @@ class Scopes:
         else:
             user_account = MainhaModels.UserAccount.objects.filter(user=user).first()
 
-            if user_account.role == 'director':
+            if user_account.role in ['director', 'manager']:
                 return MainhaModels.Project.objects.filter(account=user_account.account).all()
             else:
                 user_included_project_ids = MainhaModels.UserProject.objects.filter(user=user).values('project_id')
