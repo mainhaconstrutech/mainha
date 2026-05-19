@@ -62,6 +62,19 @@
           </div>
         </div>
         <div class="divider py-3"></div>
+        
+        {% if object.file %}
+          <div class="alert alert-primary" role="alert">
+            <a href="{{ object.file.url }}" target="_blank">
+              Arquivo do projeto: <i class="fa-solid fa-paperclip" ></i> <strong>{{ object.file|get_filename }}</strong>
+            </a>
+          </div>
+        {% else %}
+          <div class="alert alert-secondary" role="alert">
+            <strong>Arquivo do projeto não adicionado.</strong>
+          </div>
+        {% endif %}
+
         <div class="accordion mainha-accordion" id="accordionPanelsDescription">
           <div class="accordion-item">
             <h2 class="accordion-header">
@@ -77,6 +90,7 @@
             </div>
           </div>
         </div>
+
         <div class="accordion mainha-accordion mt-2" id="accordionPanelsUser">
           <div class="accordion-item">
             <h2 class="accordion-header">
