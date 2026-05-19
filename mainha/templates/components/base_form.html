@@ -1,0 +1,37 @@
+{% load mainha_utils_tags %}
+
+<form method="post" {% if form.is_multipart %}enctype="multipart/form-data"{% endif %} >
+    {% csrf_token %}
+    
+    {% if form.errors or form.non_field_errors  %}
+        <div class="alert alert-danger form-field-errors-alert" role="alert">
+            {% for error in form.non_field_errors %}
+                {{ errors }}
+            {% endfor %}
+            {% for errors in form.errors.values %}
+                {{ errors }}
+            {% endfor %}
+        </div>
+    {% endif %}
+
+    {% for field in form %}
+        {% if field.is_hidden %}
+            {{ field }}
+        {% else %}
+            <div class="pb-2">
+                {% comment %} Field Component {% endcomment %}
+                {% include "components/base_field_form.html" with field=field form=form %}
+            </div>
+        {% endif %}
+    {% endfor %}
+    <div class="d-flex justify-content-end gap-3 mt-2">
+        <a class="{{ btn_back_class|default:'btn btn-secondary py-2 px-3' }}" href="{{ btn_back_url|default:'#' }}">
+            <i class="{{ btn_back_icon_class|default:'fa-solid fa-xmark fa-lg me-2' }}"></i>
+            <span>{{ btn_back_txt|default:'Cancelar' }}</span>
+        </a>
+        <button class="{{ btn_submit_class|default:'btn btn-success py-2 px-3' }}" type="submit">
+            <i class="{{ btn_submit_icon_class|default:'fa-solid fa-check fa-lg me-2' }}"></i>
+            <span>{{ btn_submit_txt|default:'Criar' }}</span>
+        </button>
+    </div>
+</form>

@@ -46,3 +46,8 @@ def show_report_link(status):
     if status in ['archived', 'failed', 'approved']:
         return True
     return False
+
+
+@register.filter(name="get_filename")
+def get_filename(file):
+    return file.name.split('/')[-1]

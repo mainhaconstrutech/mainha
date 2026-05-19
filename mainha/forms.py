@@ -20,6 +20,7 @@ class UserForm(forms.ModelForm):
             'class': 'form-control',
             'placeholder': 'Sobrenome'
         })
+
     class Meta:
         model = User
         fields = ['first_name', 'last_name']
@@ -28,20 +29,21 @@ class UserForm(forms.ModelForm):
             'last_name': 'Sobrenome'
         }
 
+
 class UserChangePasswordForm(PasswordChangeForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.fields['old_password'].label='Senha Atual'
+        self.fields['old_password'].label = 'Senha Atual'
         self.fields['old_password'].widget.attrs.update({
             'class': 'form-control',
             'placeholder': 'Senha atual'
         })
-        self.fields['new_password1'].label='Nova Senha'
+        self.fields['new_password1'].label = 'Nova Senha'
         self.fields['new_password1'].widget.attrs.update({
             'class': 'form-control',
             'placeholder': 'Nova senha'
         })
-        self.fields['new_password2'].label='Confirmar Nova Senha'
+        self.fields['new_password2'].label = 'Confirmar Nova Senha'
         self.fields['new_password2'].widget.attrs.update({
             'class': 'form-control',
             'placeholder': 'Confirme a nova senha'
@@ -220,11 +222,18 @@ class ProjectForm(forms.ModelForm):
             'class': 'form-control',
             'placeholder': 'Descrição do projeto'
         })
+        file_field = self.fields['file']
         self.fields['file'].widget.attrs.update({
             'class': 'form-control',
             'placeholder': 'Arquivo do projeto',
-            'accept': '.pdf,.ifc'
+            'accept': '.pdf,.ifc',
+            'clear_checkbox_label': 'Remover arquivo?',
+            'initial_text': 'Arquivo atual',
+            'input_text': 'Mudar arquivo'
         })
+        self.fields['file'].widget.clear_checkbox_label = 'Remover arquivo?'
+        self.fields['file'].widget.initial_text = 'Arquivo atual'
+        self.fields['file'].widget.input_text = 'Atualizar arquivo'
 
     class Meta:
         model = MainhaModels.Project
