@@ -1,15 +1,16 @@
 from django.urls import reverse
 
 from django.views.generic.detail import DetailView
-from django.views.generic.edit import DeleteView, UpdateView, FormView
+from django.views.generic.edit import UpdateView
 
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
-from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
+
+from django.contrib.auth.views import PasswordChangeView
+
 
 from mainha import forms as MainhaForms
 from mainha import models as MainhaModels
-from mainha import scopes as MainhaScopes
 
 
 class UserDetailView(LoginRequiredMixin, PermissionRequiredMixin, DetailView):
@@ -24,9 +25,9 @@ class UserDetailView(LoginRequiredMixin, PermissionRequiredMixin, DetailView):
         if authenticated_user == user_data:
             return True
         elif authenticated_user.is_superuser:
-            return not(user_data.is_superuser)
+            return not (user_data.is_superuser)
         elif authenticated_user.is_staff:
-            return not(user_data.is_staff)
+            return not (user_data.is_staff)
 
         return False
 
@@ -34,7 +35,7 @@ class UserDetailView(LoginRequiredMixin, PermissionRequiredMixin, DetailView):
         context = super().get_context_data(**kwargs)
         context['account_user'] = MainhaModels.UserAccount.objects.filter(user_id=self.kwargs.get('pk')).first()
         return context
-    
+
 
 class UserUpdateView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
     model = User
@@ -43,25 +44,23 @@ class UserUpdateView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
     context_object_name = 'user_data'
 
     def has_permission(self):
-        return self.request.user ==User.objects.get(pk=self.kwargs.get('pk'))
+        return self.request.user == User.objects.get(pk=self.kwargs.get('pk'))
 
     def get_success_url(self):
         return reverse('user-detail', kwargs=self.kwargs)
 
 
-# class UserUpdatePasswordView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
-#     model = MainhaModels.UserAccount
-#     template_name = 'user/delete.html'
+class UserUpdatePasswordView(LoginRequiredMixin, PermissionRequiredMixin, PasswordChangeView):
+    form_class = MainhaForms.UserChangePasswordForm
+    template_name = 'user/update-password.html'
 
-#     def has_permission(self):
-#         return MainhaScopes.Scopes.has_director_permission(self.request.user)
+    def has_permission(self):
+        return self.request.user == User.objects.get(pk=self.kwargs.get('pk'))
 
-#     def form_valid(self, form):
-#         user = self.object.user
-#         result = super().form_valid(form)
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['object'] = self.request.user
+        return context
 
-#         user.delete()
-#         return result
-
-#     def get_success_url(self):
-#         return reverse('account-detail', kwargs={'pk': self.kwargs.get('account_id')})
+    def get_success_url(self):
+        return reverse('user-detail', kwargs=self.kwargs)

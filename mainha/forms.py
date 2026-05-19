@@ -2,6 +2,7 @@ from django import forms
 from django.core.exceptions import ValidationError
 
 from django.contrib.auth.models import User
+from django.contrib.auth.forms import PasswordChangeForm
 
 from mainha import models as MainhaModels
 from mainha import scopes as MainhaScopes
@@ -26,6 +27,25 @@ class UserForm(forms.ModelForm):
             'first_name': 'Nome',
             'last_name': 'Sobrenome'
         }
+
+class UserChangePasswordForm(PasswordChangeForm):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['old_password'].label='Senha Atual'
+        self.fields['old_password'].widget.attrs.update({
+            'class': 'form-control',
+            'placeholder': 'Senha atual'
+        })
+        self.fields['new_password1'].label='Nova Senha'
+        self.fields['new_password1'].widget.attrs.update({
+            'class': 'form-control',
+            'placeholder': 'Nova senha'
+        })
+        self.fields['new_password2'].label='Confirmar Nova Senha'
+        self.fields['new_password2'].widget.attrs.update({
+            'class': 'form-control',
+            'placeholder': 'Confirme a nova senha'
+        })
 
 
 class UserRegistrationForm(forms.ModelForm):

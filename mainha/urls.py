@@ -18,6 +18,7 @@ urlpatterns = [
     path('accounts/<slug:account_id>/user/<slug:pk>/delete/', MainhaViews.UserAccountDeleteView.as_view(), name='account-user-delete'),
     path('users/<slug:pk>/', MainhaViews.UserDetailView.as_view(), name='user-detail'),
     path('users/<slug:pk>/edit/', MainhaViews.UserUpdateView.as_view(), name='user-update'),
+    path('users/<slug:pk>/change-password/', MainhaViews.UserUpdatePasswordView.as_view(), name='user-change-password'),
     path('projects/', MainhaViews.ProjectListView.as_view(), name='project-list'),
     path('projects/new/', MainhaViews.ProjectCreateView.as_view(), name='project-create'),
     path('projects/<slug:pk>/', MainhaViews.ProjectDetailView.as_view(), name='project-detail'),
