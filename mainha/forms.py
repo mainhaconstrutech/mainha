@@ -220,13 +220,19 @@ class ProjectForm(forms.ModelForm):
             'class': 'form-control',
             'placeholder': 'Descrição do projeto'
         })
+        self.fields['file'].widget.attrs.update({
+            'class': 'form-control',
+            'placeholder': 'Arquivo do projeto',
+            'accept': '.pdf,.ifc'
+        })
 
     class Meta:
         model = MainhaModels.Project
-        fields = ['name', 'description']
+        fields = ['name', 'description', 'file']
         labels = {
             'name': 'Nome',
             'description': 'Descrição',
+            'file': 'Arquivo do projeto',
         }
 
 

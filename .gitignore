@@ -191,6 +191,9 @@ cython_debug/
 # Personal Docs
 deploy.md
 
+# Files Uploaded by Users
+media/projects/
+
 # Ruff stuff:
 .ruff_cache/
 

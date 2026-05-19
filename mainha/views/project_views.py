@@ -1,8 +1,8 @@
 from django.urls import reverse_lazy, reverse
 
 from django.views.generic.list import ListView
-from django.views.generic.detail import DetailView
-from django.views.generic.edit import DeleteView, CreateView, UpdateView
+from django.views.generic.detail import DetailView, SingleObjectTemplateResponseMixin
+from django.views.generic.edit import DeleteView, UpdateView, ModelFormMixin, ProcessFormView
 
 from django.contrib.auth.mixins import LoginRequiredMixin
 
@@ -20,15 +20,22 @@ class ProjectListView(LoginRequiredMixin, ListView):
         return MainhaScopes.Scopes.list_projects(self.request.user)
 
 
-class ProjectCreateView(LoginRequiredMixin, CreateView):
+class ProjectCreateView(LoginRequiredMixin, SingleObjectTemplateResponseMixin, ModelFormMixin, ProcessFormView):
     model = MainhaModels.Project
     form_class = MainhaForms.ProjectForm
     template_name = 'project/create.html'
     success_url = reverse_lazy('project-list')
 
-    def post(self, request, *args, **kwargs):
-        response = super().post(request, *args, **kwargs)
+    def get(self, request, *args, **kwargs):
+        self.object = None
+        return super().get(request, *args, **kwargs)
 
+    def post(self, request, *args, **kwargs):
+        form = self.get_form()
+        if form.is_valid():
+            self.object = self.model.objects.create(name=form.cleaned_data.get('name'))
+
+        response = super().post(request, *args, **kwargs)
         self.object = MainhaServices.ProjectService.set_project_context(self.request.user, self.object)
         return response
 

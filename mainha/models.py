@@ -1,6 +1,12 @@
 from django.db import models
 from django.contrib.auth.models import User
 
+from django.core.validators import FileExtensionValidator
+
+
+def project_file_dir_path(instance, filename):
+    # file will be uploaded to MEDIA_ROOT/projects/<project_id>/<filename>
+    return f"projects/{instance.id}/{filename}"
 
 class Account(models.Model):
     SUBSCRIPTION_CHOICES = {
@@ -88,6 +94,8 @@ class Project(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     created_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, default=None)
+    file = models.FileField(upload_to=project_file_dir_path, blank=True, null=True, default=None,
+                            validators=[FileExtensionValidator(['pdf', 'ifc'])])
 
     def __str__(self):
         return f"{self.id} - {self.name}"
